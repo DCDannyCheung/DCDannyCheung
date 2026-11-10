@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ECI → Perifocal · Three rotations, a new basis</title>
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:dark;--bg:#0b111b;--panel:#111a27;--line:#253142;--text:#e9eef5;--muted:#96a5b8;--cyan:#67dacb;--orange:#ffa77e;--purple:#c1a3ff;--gold:#f1d17f;--blue:#7fd1ff;--pink:#ff9ec4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:13px}
+button,input,select{font:inherit}
+button,select{border:1px solid var(--line);border-radius:7px;background:#172231;color:var(--text)}
+button{cursor:pointer;transition:background .15s,border-color .15s}
+button:hover{background:#243246;border-color:#5e728b}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+button:disabled{opacity:.35;cursor:default}
+a{color:var(--cyan)}
+.app{max-width:1600px;margin:auto;padding:14px 24px 12px}
+.masthead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{font-size:11px;font-weight:600;letter-spacing:2px;display:flex;align-items:center;gap:10px}
+.mark{width:21px;height:21px;border:1px solid var(--cyan);border-radius:50%;position:relative;transform:rotate(-30deg)}
+.mark:after{content:"";position:absolute;inset:6px -4px;border:1px solid var(--cyan);border-radius:50%}
+.edition{color:var(--muted);font-size:11px;letter-spacing:1px}
+.intro{display:flex;justify-content:space-between;align-items:end;padding:12px 0;gap:16px}
+h1{font-size:clamp(21px,2.5vw,30px);font-weight:550;letter-spacing:-1px;margin:0 0 4px}
+h1 span{color:var(--cyan);padding:0 8px}
+.subtitle{margin:0;color:var(--muted);line-height:1.6;font-size:12.5px}
+.tag{white-space:nowrap;font-size:11px;color:var(--cyan);border:1px solid #2c534f;background:#132927;padding:6px 10px;border-radius:20px}
+.workspace{display:flex;flex-direction:column;gap:9px}
+.params{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.param-card{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:7px 10px 8px;--accent:var(--cyan);min-width:0;transition:border-color .15s,background .15s}
+.param-card:nth-child(1){--accent:var(--cyan)}
+.param-card:nth-child(2){--accent:var(--orange)}
+.param-card:nth-child(3){--accent:var(--purple)}
+.param-card:nth-child(4){--accent:var(--blue)}
+.param-card:nth-child(5){--accent:var(--pink)}
+.param-card:nth-child(6){--accent:var(--gold)}
+.param-card.active{border-color:var(--accent);background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 8%,#111a27),#111a27)}
+.param-top{display:flex;align-items:center;gap:6px;min-width:0}
+.param-sym{font-family:Georgia,serif;font-size:21px;color:var(--accent);line-height:1;flex-shrink:0}
+.param-name{font-size:11px;color:var(--muted);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
+.param-val{margin-left:auto;font-size:16px;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.4px;line-height:1;flex-shrink:0;white-space:nowrap}
+.step-play{font-size:9px;padding:1px 4px;color:var(--accent);background:transparent;border-color:transparent;flex-shrink:0;white-space:nowrap}
+.step-play:hover{background:#243246;border-color:var(--accent)}
+.param-card input[type=range]{display:block;width:100%;margin:3px 0 0;accent-color:var(--accent);height:13px}
+.visual{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#182739,#101925 65%);display:flex;flex-direction:column}
+.canvas-wrap{position:relative;height:clamp(360px,54vh,600px);min-width:0}
+#scene{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+#scene:active{cursor:grabbing}
+.scene-caption{padding:8px 16px 4px;font-size:11px;color:var(--muted);line-height:1.5;flex-shrink:0;background:#101925}
+.scene-caption b{display:block;font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.view-head{display:flex;justify-content:flex-end;align-items:center;padding:2px 16px 8px;gap:8px;flex-shrink:0;background:#101925}
+.view-buttons{display:flex;gap:5px}
+.view-buttons button{padding:5px 9px;font-size:11px;background:#14202ebd}
+.view-hint{position:absolute;bottom:8px;left:16px;right:16px;text-align:center;color:#8494a9;font-size:10px;pointer-events:none;z-index:3}
+#diagram{
+  position:absolute;
+  left:10px;
+  top:10px;
+  width:clamp(150px, 22%, 200px);
+  height:calc(100% - 42px);
+  min-height:200px;
+  background:rgba(16,25,37,0.82);
+  border:1px solid #253142;
+  border-radius:10px;
+  pointer-events:none;
+  z-index:2;
+  box-shadow:0 4px 18px rgba(0,0,0,.35);
+}
+.canvas-meta{border-top:1px solid #25314288;padding:6px 14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;flex-shrink:0}
+.canvas-options{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.canvas-options label{display:flex;align-items:center;gap:4px;cursor:pointer}
+.canvas-options input{accent-color:var(--cyan)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.swatch{width:14px;height:2px;background:var(--cyan)}
+.swatch.eci{background:#788ba1}
+.swatch.orbit{background:transparent;border-top:2px dashed #a0b5ce}
+.swatch.r{background:var(--gold)}
+.degenerate{color:var(--orange);font-size:10px;line-height:1.5;margin-top:4px;flex-basis:100%}
+.transport{padding:8px 14px 9px;background:#101925;border-top:1px solid var(--line);flex-shrink:0}
+.timeline{display:flex;align-items:center;gap:10px}
+.timeline input{flex:1;min-width:0;accent-color:var(--cyan)}
+.time-label{font-variant-numeric:tabular-nums;font-size:11px;color:var(--muted);width:74px;text-align:right;flex-shrink:0}
+.timeline-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin:1px 84px 7px 0}
+.transport-buttons{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.transport-buttons button{padding:7px 11px;font-size:11px}
+.transport-buttons .primary{background:var(--cyan);color:#10221f;border-color:var(--cyan);font-weight:650;min-width:96px}
+.transport-buttons select{margin-left:auto;padding:6px;font-size:11px}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.info-panel{border:1px solid var(--line);border-radius:9px;padding:10px 14px;background:#101824}
+.info-heading{font-size:11px;color:var(--muted);margin:0 0 7px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;line-height:1.5}
+.coord-row{display:flex;align-items:center;gap:12px;font-family:Consolas,monospace;font-size:12px;padding:2px 0}
+.coord-row span{width:78px;color:var(--muted);font-size:10px;flex-shrink:0}
+.coord-row code{color:var(--gold);white-space:pre}
+.coord-note{color:var(--muted);font-size:10px;margin:7px 0 0;line-height:1.55}
+.formula{font-family:Consolas,monospace;font-size:12px;line-height:1.8;overflow-wrap:anywhere}
+.formula strong{color:var(--cyan);font-weight:400}
+details{margin-top:8px;color:var(--muted);font-size:11px}
+summary{cursor:pointer;width:fit-content}
+details p{line-height:1.8}
+#matrix{font-family:Consolas,monospace;line-height:1.7;color:#c9d6e6;white-space:pre;font-size:11px}
+.footer{display:flex;justify-content:space-between;gap:16px;font-size:10px;color:#7e8fa4;margin-top:8px;line-height:1.7}
+.footer a{color:#9bacc0;text-decoration:none}
+.hidden{display:none}
+body.hide-notes .note{display:none}
+@media(max-width:1050px){
+  .app{padding:12px 16px}
+  .canvas-wrap{height:460px}
+  .intro .tag{display:none}
+  #diagram{width:160px;top:8px;height:calc(100% - 36px)}
+}
+@media(max-width:820px){
+  .params{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #diagram{width:140px;left:8px}
+}
+@media(max-width:760px){
+  .app{padding:10px}
+  .edition{display:none}
+  .intro{padding:10px 0}
+  .canvas-wrap{height:430px}
+  .lower{grid-template-columns:1fr}
+  .view-head{flex-direction:column;align-items:flex-start;padding:2px 10px 8px}
+  .view-buttons{width:100%;flex-wrap:wrap}
+  .view-buttons button{flex:1;white-space:nowrap;padding:6px 4px;font-size:10px}
+  .canvas-meta{padding:6px 10px}
+  .transport{padding:8px 10px}
+  .transport-buttons{gap:5px}
+  .transport-buttons .primary{min-width:82px}
+  .transport-buttons button{padding:7px 6px}
+  .transport-buttons select{padding:6px 4px}
+  .timeline-labels{font-size:8.5px;margin-right:78px}
+  .footer{flex-direction:column;gap:2px}
+  .scene-caption{padding:8px 10px 4px}
+  .coord-row{gap:4px;font-size:11px}
+  .coord-row span{width:70px}
+  #diagram{width:125px;top:8px;height:calc(100% - 34px);min-height:170px}
+}
+@media(max-width:460px){
+  .params{grid-template-columns:1fr}
+  #diagram{display:none}
+}
+</style>
+</head>
+<body>
+<main class="app">
+ <header class="masthead"><div class="brand"><span class="mark" aria-hidden="true"></span>ORBITAL / ORBITAL GEOMETRY</div><div class="edition">INTERACTIVE FRAME TRANSFORMATION · 01</div></header>
+ <section class="intro"><div><h1>ECI <span>→</span> Perifocal</h1><p class="subtitle">Three rotations, a new basis. Explore what Ω, i, ω, a, e and ν each change.</p></div><span class="tag">3–1–3 Euler rotations</span></section>
+ <div class="workspace">
+  <section class="params" aria-label="Six orbital elements">
+   <section class="param-card" data-card="0" title="Right ascension of the ascending node: rotate about fixed Z from X toward node N.">
+    <div class="param-top"><span class="param-sym">Ω</span><span class="param-name">RAAN</span><span class="param-val"><output for="raan" id="raanValue">45°</output></span><button class="step-play" data-step="0" aria-label="Demonstrate RAAN">①</button></div>
+    <input id="raan" type="range" min="0" max="360" value="45" aria-label="RAAN Ω in degrees">
+   </section>
+   <section class="param-card" data-card="1" title="Inclination: tilt the moving plane about the node line into the orbital plane.">
+    <div class="param-top"><span class="param-sym">i</span><span class="param-name">Inclination</span><span class="param-val"><output for="inclination" id="inclinationValue">55°</output></span><button class="step-play" data-step="1" aria-label="Demonstrate inclination">②</button></div>
+    <input id="inclination" type="range" min="0" max="180" value="55" aria-label="Inclination i in degrees">
+   </section>
+   <section class="param-card" data-card="2" title="Argument of periapsis: rotate in the orbital plane from N toward periapsis, along P.">
+    <div class="param-top"><span class="param-sym">ω</span><span class="param-name">Arg. of periapsis</span><span class="param-val"><output for="argp" id="argpValue">40°</output></span><button class="step-play" data-step="2" aria-label="Demonstrate argument of periapsis">③</button></div>
+    <input id="argp" type="range" min="0" max="360" value="40" aria-label="Argument of periapsis ω in degrees">
+   </section>
+   <section class="param-card" title="Semi-major axis: scales the whole ellipse; the dashed target and green ellipse always share the same shape.">
+    <div class="param-top"><span class="param-sym">a</span><span class="param-name">Semi-major axis</span><span class="param-val"><output for="semi" id="aValue">2.65</output></span></div>
+    <input id="semi" type="range" min="1.2" max="3.2" step="0.01" value="2.65" aria-label="Semi-major axis a in schematic units">
+   </section>
+   <section class="param-card" title="Eccentricity: 0 is circular; larger values stretch the ellipse about the focus.">
+    <div class="param-top"><span class="param-sym">e</span><span class="param-name">Eccentricity</span><span class="param-val"><output for="ecc" id="eValue">0.40</output></span></div>
+    <input id="ecc" type="range" min="0" max="0.75" step="0.01" value="0.4" aria-label="Eccentricity e">
+   </section>
+   <section class="param-card" title="True anomaly: places the position vector r along the orbit, measured from periapsis.">
+    <div class="param-top"><span class="param-sym">ν</span><span class="param-name">True anomaly</span><span class="param-val"><output for="nu" id="nuValue">58°</output></span></div>
+    <input id="nu" type="range" min="0" max="360" step="1" value="58" aria-label="True anomaly ν in degrees">
+   </section>
+  </section>
+
+  <section class="visual" aria-label="Interactive 3D rotation demonstration">
+   <div class="canvas-wrap">
+     <canvas id="scene" aria-label="The green ellipse rotates with the moving frame and matches the fixed dashed target orbit after three steps. Drag to orbit the view; scroll to zoom." tabindex="0" width="1327" height="444"></canvas>
+     <canvas id="diagram" aria-label="Diagram showing the six orbital elements mapped to ECI coordinates"></canvas>
+     <div class="view-hint">Drag to orbit · Scroll to zoom · Space to play / pause</div>
+   </div>
+   <div class="scene-caption"><b id="sceneTitle">Start · Ellipse in the equatorial plane</b><span id="sceneSub">The green ellipse rotates with the moving axes</span></div>
+   <div class="view-head"><div class="view-buttons"><button id="homeView">3D view</button><button id="axisView">View along axis</button><button id="topView">Equatorial view</button></div></div>
+   <div class="canvas-meta">
+     <div class="canvas-options"><label><input type="checkbox" id="planes" checked="">Planes</label><label><input type="checkbox" id="vector" checked="">Position vector</label><label><input type="checkbox" id="allAngles">All angle arcs</label><label><input type="checkbox" id="showNotes">Notes</label></div>
+     <div class="legend"><span><i class="swatch eci"></i>Fixed ECI axes</span><span><i class="swatch"></i>Rotating ellipse</span><span><i class="swatch orbit"></i>Fixed target orbit</span><span><i class="swatch r"></i>Fixed position vector r</span></div>
+     <div class="degenerate hidden note" id="degenerate"></div>
+   </div>
+   <div class="transport"><div class="timeline"><input id="progress" aria-label="Animation progress" type="range" min="0" max="3" step="0.001" value="0"><span class="time-label" id="progressText">0 / 3</span></div><div class="timeline-labels"><span>ECI</span><span>Ω · Node line</span><span>i · Plane tilt</span><span>ω · Periapsis</span></div><div class="transport-buttons"><button class="primary" id="play">▶ Play all</button><button id="next">Next step →</button><button id="reset">↺ Reset</button><select id="speed" aria-label="Playback speed"><option value="0.5">0.5× Slow</option><option value="1" selected="">1× Normal</option><option value="2">2× Fast</option></select></div></div>
+  </section>
+ </div>
+
+ <div class="lower">
+  <section class="info-panel"><h2 class="info-heading">One vector, different coordinates<span>Illustrative units</span></h2><div class="coord-row"><span>r · ECI</span><code id="eciCoords">[ -0.023  -0.456   1.779 ]</code></div><div class="coord-row"><span id="movingName">r · PQW</span><code id="movingCoords">[  0.973   1.558   0.000 ]</code></div><p class="coord-note note">During playback, r stays fixed in space; its final W component is zero. Adjusting the orbital elements resets the target orbit and example vector.</p></section>
+  <section class="info-panel"><h2 class="info-heading">Axis rotation and coordinate transformation</h2><div class="formula">B = R<sub>z</sub>(Ω) R<sub>x</sub>(i) R<sub>z</sub>(ω)<br><strong>r<sub>PQW</sub> = Bᵀ r<sub>ECI</sub></strong></div><details><summary>Show matrix and sign conventions</summary><p>R denotes a right-handed active rotation matrix; vectors are columns. The columns of B are the P, Q, and W directions expressed in ECI. The animation rotates about successive local axes by Ω, i, and ω. Coordinate conversion uses the inverse: Bᵀ = R<sub>z</sub>(−ω) R<sub>x</sub>(−i) R<sub>z</sub>(−Ω). The target ECI → PQW matrix is:</p><div id="matrix">[ -0.692   0.354   0.629 ]
+[  0.418  -0.514   0.749 ]
+[  0.589   0.781   0.208 ]</div><p>P points toward periapsis. Q is perpendicular to P in the orbital plane, in the direction of increasing true anomaly, and W = P × Q. The three angular elements Ω, i, ω fix the orbit's orientation; a and e fix its shape; ν fixes the position of r on that orbit. This animation demonstrates a change of basis, not satellite motion along the orbit.</p></details></section>
+ </div>
+ <footer class="footer"><span id="footerNote" class="note">Earth and distances are schematic · a = 2.65 · e = 0.40 · ν = 58° · Right-handed frames</span><a href="https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html" target="_blank" rel="noopener noreferrer">Reference: Orbital Mechanics &amp; Astrodynamics ↗</a></footer>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),TAU=Math.PI*2,D=Math.PI/180;
+const add=(a,b)=>a.map((v,i)=>v+b[i]),scale=(v,s)=>v.map(x=>x*s),dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],unit=v=>scale(v,1/Math.hypot(...v));
+const X=[1,0,0],Y=[0,1,0],Z=[0,0,1],O=[0,0,0],colors=['#67dacb','#ffa77e','#c1a3ff'];
+const state={angles:[45,55,40],a:2.65,e:0.4,nu:58,progress:0,running:false,auto:true,goal:1,hold:0,speed:1,yaw:35*D,elev:27*D,zoom:1,view:'free'};
+function basis(raan,inc,arg){const c=Math.cos,s=Math.sin;return [[c(raan)*c(arg)-s(raan)*s(arg)*c(inc),s(raan)*c(arg)+c(raan)*s(arg)*c(inc),s(arg)*s(inc)],[-c(raan)*s(arg)-s(raan)*c(arg)*c(inc),-s(raan)*s(arg)+c(raan)*c(arg)*c(inc),c(arg)*s(inc)],[s(raan)*s(inc),-c(raan)*s(inc),c(inc)]];}
+const transform=(b,v)=>add(add(scale(b[0],v[0]),scale(b[1],v[1])),scale(b[2],v[2]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function activeStep(){return clamp(Math.ceil(state.progress)-1,0,2);}
+function currentAngles(){return state.angles.map((v,i)=>v*D*clamp(state.progress-i,0,1));}
+function targetBasis(){return basis(...state.angles.map(v=>v*D));}
+function nodeDirection(){return [Math.cos(state.angles[0]*D),Math.sin(state.angles[0]*D),0];}
+function rotationAxis(){return [Z,nodeDirection(),targetBasis()[2]][activeStep()];}
+function orbitPoint(t,a=state.a,e=state.e){const p=a*(1-e*e);const r=p/(1+e*Math.cos(t));return [r*Math.cos(t),r*Math.sin(t),0];}
+function orbitPath(b){return Array.from({length:241},(_,j)=>transform(b,orbitPoint(j*TAU/240)));}
+function exampleVector(){return transform(targetBasis(),orbitPoint(state.nu*D));}
+function format(v){return '[ '+v.map(n=>(Math.abs(n)<.0005?0:n).toFixed(3).padStart(6,' ')).join('  ')+' ]';}
+let _vcCache=null,_vcKey='';
+function viewCenter(){const k=state.a+'|'+state.e+'|'+state.angles.join(',');if(k!==_vcKey){_vcKey=k;_vcCache=transform(targetBasis(),[-state.a*state.e,0,0]);}return _vcCache;}
+function viewRadius(){return state.a*1.3+0.35;}
+const descriptions=[['01 / Ω · Orient the node line','The green ellipse and moving axes rotate together about the fixed Z axis, staying in the equatorial plane. After rotating through Ω, the moving x axis points toward the ascending node N.'],['02 / i · Tilt the orbital plane','Tilt the green ellipse and its axes about the ascending-node direction N. At the end of this step, both ellipses lie in the same plane; the periapsis directions still need to align.'],['03 / ω · Align periapsis','Rotate the green ellipse within the orbital plane about the orbit normal W. Its periapsis moves to the target periapsis, and the entire green outline coincides with the dashed orbit.']];
+function syncUI(){
+ const k=activeStep(),a=currentAngles(),done=state.progress>=3;
+ $('progress').value=state.progress;$('progressText').textContent=state.progress===0?'0 / 3':done?'3 / 3 Done':`${k+1} / 3`;
+ $('play').textContent=state.running?'Ⅱ Pause':done?'↺ Replay':'▶ Play all';$('next').disabled=done;
+ $('aValue').textContent=state.a.toFixed(2);
+ $('eValue').textContent=state.e.toFixed(2);
+ $('nuValue').textContent=state.nu.toFixed(0)+'°';
+ $('footerNote').textContent=`Earth and distances are schematic · a = ${state.a.toFixed(2)} · e = ${state.e.toFixed(2)} · ν = ${state.nu.toFixed(0)}° · Right-handed frames`;
+ document.querySelectorAll('.param-card[data-card]').forEach(el=>el.classList.toggle('active',Number(el.dataset.card)===k));
+ if(state.progress===0){$('sceneTitle').textContent='Start · Ellipse in the equatorial plane';$('sceneSub').textContent='The green ellipse rotates with the moving axes';}
+ else if(done){$('sceneTitle').textContent='Finish · The two orbits coincide';$('sceneSub').textContent='Solid and dashed outlines match · Axes: P / Q / W';}
+ else{$('sceneTitle').textContent=descriptions[k][0];$('sceneSub').textContent=`Rotated ${ (a[k]/D).toFixed(1) }° / ${state.angles[k]}° · ${['about fixed Z','about node direction N','about orbit normal W'][k]}`;}
+ const notes=[];
+ if(state.e<0.005)notes.push('At e = 0 the orbit is circular: periapsis is undefined, so ω and ν lose their individual meaning — only the sum ω + ν is observable.');
+ if(state.angles[1]===0||state.angles[1]===180)notes.push('At i = 0° or 180°, the node line is undefined. Here, Ω and ω follow a chosen convention; they cannot be determined independently from the orbit.');
+ $('degenerate').classList.toggle('hidden',notes.length===0);
+ $('degenerate').innerHTML=notes.join('<br>');
+ const r=exampleVector(),b=basis(...a);$('eciCoords').textContent=format(r);$('movingCoords').textContent=format(b.map(v=>dot(v,r)));$('movingName').textContent=done?'r · PQW':'r · Moving';$('matrix').textContent=targetBasis().map(row=>format(row)).join('\n');
+}
+const canvas=$('scene'),ctx=canvas.getContext('2d');let width=800,height=460,dirty=true,objects=[],labels=[],boxes=[];
+let camera={right:X,up:Y,forward:Z};
+function setCamera(){if(state.view==='axis'){const f=rotationAxis(),up=Math.abs(dot(f,Z))>.97?Y:Z;camera={forward:f,right:unit(cross(up,f))};camera.up=cross(f,camera.right);}else{const f=[Math.cos(state.elev)*Math.cos(state.yaw),Math.cos(state.elev)*Math.sin(state.yaw),Math.sin(state.elev)];camera={forward:f,right:unit(cross(Z,f))};camera.up=cross(f,camera.right);}}
+function project(v){const c=viewCenter(),d=add(v,scale(c,-1)),vr=viewRadius();const s=Math.min(width,height)*0.5/vr*0.94*state.zoom;return {x:width*.5+dot(d,camera.right)*s,y:height*.5-dot(d,camera.up)*s,z:dot(d,camera.forward),s};}
+function line(a,b,color,w=1,dash=[]){const pa=project(a),pb=project(b);objects.push({z:(pa.z+pb.z)/2,draw(){ctx.beginPath();ctx.setLineDash(dash);ctx.lineWidth=w;ctx.strokeStyle=color;ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);ctx.stroke();ctx.setLineDash([]);}});}
+function curve(points,color,w=1,dash=[]){for(let i=1;i<points.length;i++){if(!dash.length||i%6<3)line(points[i-1],points[i],color,w);}}
+function arrow(a,b,color,w=2){line(a,b,color,w);const pa=project(a),pb=project(b);objects.push({z:pb.z+.002,draw(){const d=Math.atan2(pb.y-pa.y,pb.x-pa.x);if(Math.hypot(pb.y-pa.y,pb.x-pa.x)<2){ctx.fillStyle=color;ctx.beginPath();ctx.arc(pb.x,pb.y,3,0,TAU);ctx.fill();return;}ctx.beginPath();ctx.moveTo(pb.x,pb.y);ctx.lineTo(pb.x-10*Math.cos(d-.35),pb.y-10*Math.sin(d-.35));ctx.lineTo(pb.x-10*Math.cos(d+.35),pb.y-10*Math.sin(d+.35));ctx.closePath();ctx.fillStyle=color;ctx.fill();}});}
+function label(p,text,color='#c4d1e0',size=12,priority=0){labels.push({p:project(p),text,color,size,priority});}
+function dotMark(p,color,size=4){const q=project(p);objects.push({z:q.z+.01,draw(){ctx.beginPath();ctx.arc(q.x,q.y,size,0,TAU);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#0b111b';ctx.lineWidth=2;ctx.stroke();}});}
+function orbitFill(points,color){const pts=points.map(project);objects.push({z:-.01,draw(){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();}});}
+// 无限大 XOY 平面：超出画布的大四边形 + 网格
+function infiniteXYPlane(ext,gridStep,gridRange){
+ const cpts=[[-ext,-ext,0],[ext,-ext,0],[ext,ext,0],[-ext,ext,0]].map(project);
+ objects.push({z:-.1,draw(){ctx.beginPath();cpts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle='#7896b518';ctx.fill();}});
+ const n=Math.floor(gridRange/gridStep);
+ for(let j=-n;j<=n;j++){
+   const v=j*gridStep;
+   line([-ext,v,0],[ext,v,0],'#8195af16',1);
+   line([v,-ext,0],[v,ext,0],'#8195af16',1);
+ }
+}
+function earth(){const q=project(O),radius=Math.max(4,.34*q.s);objects.push({z:0,draw(){const gradient=ctx.createRadialGradient(q.x-radius*.4,q.y-radius*.4,1,q.x,q.y,radius);gradient.addColorStop(0,'#508c9d');gradient.addColorStop(.5,'#254958');gradient.addColorStop(1,'#102536');ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.fillStyle=gradient;ctx.fill();ctx.strokeStyle='#6b9ead88';ctx.lineWidth=1;ctx.stroke();ctx.save();ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.clip();ctx.strokeStyle='#9ec8c82d';for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(q.x,q.y+j*radius*.5,radius, radius*.24,0,0,TAU);ctx.stroke();}ctx.beginPath();ctx.ellipse(q.x,q.y,radius*.45,radius,-.3,0,TAU);ctx.stroke();ctx.restore();}});}
+function angleArc(k,partial,bright){const target=state.angles[k]*D,angle=target*partial;if(angle<.001)return;const n=nodeDirection(),t=[-n[1],n[0],0],inc=state.angles[1]*D;let u,v,radius;
+ if(k===0){u=X;v=Y;radius=1.05;}else if(k===1){u=Z;v=scale(t,-1);radius=1.36;}else{u=n;v=add(scale(t,Math.cos(inc)),scale(Z,Math.sin(inc)));radius=1.68;}
+ const count=Math.max(4,Math.ceil(angle*28));const path=Array.from({length:count+1},(_,j)=>scale(add(scale(u,Math.cos(angle*j/count)),scale(v,Math.sin(angle*j/count))),radius));
+ curve(path,bright?colors[k]:colors[k]+'35',bright?3:1,bright?[]:[2,3]);if(bright){arrow(path[path.length-3],path[path.length-1],colors[k],2);line(O,path[0],colors[k]+'55',1,[3,4]);line(O,path[path.length-1],colors[k]+'55',1,[3,4]);const mid=angle*.5;label(scale(add(scale(u,Math.cos(mid)),scale(v,Math.sin(mid))),radius+.22),`${['Ω','i','ω'][k]} ${(angle/D).toFixed(0)}°`,colors[k],13,3);}}
+function drawLabels(){labels.sort((a,b)=>b.priority-a.priority);for(const l of labels){ctx.font=`${l.size>=13?'600 ':''}${l.size}px "Segoe UI","Microsoft YaHei",sans-serif`;const w=ctx.measureText(l.text).width+10,h=l.size+8;let x=clamp(l.p.x+8,8,width-w-8),y=clamp(l.p.y-h/2,8,height-h-24);const orig={x,y};for(let j=0;j<20;j++){if(!boxes.some(b=>x<b.x+b.w+3&&x+w+3>b.x&&y<b.y+b.h+2&&y+h+2>b.y))break;y=clamp(orig.y+(j%2?-1:1)*Math.ceil((j+1)/2)*(h+3),8,height-h-24);if(j>10)x=clamp(orig.x+w+8,8,width-w-8);}boxes.push({x,y,w,h});if(Math.hypot(x-orig.x,y-orig.y)>15){ctx.beginPath();ctx.moveTo(l.p.x,l.p.y);ctx.lineTo(x+w/2,y+h/2);ctx.strokeStyle=l.color+'55';ctx.lineWidth=1;ctx.stroke();}ctx.fillStyle='#101925df';ctx.beginPath();ctx.roundRect(x,y,w,h,4);ctx.fill();ctx.fillStyle=l.color;ctx.textBaseline='middle';ctx.fillText(l.text,x+5,y+h/2);}}
+function render(){setCamera();ctx.clearRect(0,0,width,height);objects=[];labels=[];boxes=[];const k=activeStep(),b=basis(...currentAngles()),target=targetBasis(),n=nodeDirection(),done=state.progress>=3;
+ ctx.strokeStyle='#8faac409';ctx.lineWidth=1;for(let x=width%40;x<width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke();}for(let y=height%40;y<height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
+ const movingOrbit=orbitPath(b);
+ const orbit=orbitPath(target);
+ const R=viewRadius()*0.86;
+ // 轨道平面填充：稍深的紫色
+ orbitFill(orbit,'#8c72d942');
+ if($('planes').checked){
+   // 赤道面：无限延伸的平面（无圆形边界）
+   infiniteXYPlane(viewRadius()*10, viewRadius()/2.2, viewRadius()*3.2);
+ }
+ [X,Y,Z].forEach((v,i)=>{line(scale(v,-R*0.92),O,'#8293ab35',1,[4,5]);arrow(O,scale(v,R*1.02),'#8293ab88',1.25);label(scale(v,R*1.05),['X · ECI','Y · ECI','Z · ECI'][i],'#92a4ba',10);});
+ curve(movingOrbit,'#67dacbcc',2.5);
+ curve(orbit,done?'#e5eef5ee':'#b7c9df99',1.5,[4,4]);
+ if(!done)dotMark(transform(b,orbitPoint(0)),'#67dacb',4);
+ line(scale(n,-R*0.94),scale(n,R*0.94),'#f0c99877',1.4,[5,5]);label(scale(n,R*0.96),state.angles[1]===0||state.angles[1]===180?'N · Chosen direction':'N · Ascending node','#e3c496',10,1);
+ const peri=transform(target,orbitPoint(0));dotMark(peri,'#67dacb',4);label(peri,'Periapsis','#8de6d9',10,1);
+ const axis=rotationAxis();line(scale(axis,-R*0.92),scale(axis,R*0.92),colors[k]+'44',7);arrow(scale(axis,R*0.12),scale(axis,R*0.96),colors[k]+'cc',2);
+ b.forEach((v,i)=>{arrow(O,scale(v,R*0.82),colors[i],2.5);label(scale(v,R*0.86),done?['P','Q','W'][i]:['x′','y′','z′'][i],colors[i],15,2);});
+ for(let j=0;j<3;j++){if(j===k||$('allAngles').checked){angleArc(j,1,false);angleArc(j,clamp(state.progress-j,0,1),true);}}
+ if($('vector').checked){const r=exampleVector();arrow(O,r,'#f1d17f',2);dotMark(r,'#f1d17f',4);label(r,'r · Fixed position','#f1d17f',10,1);}
+ earth();objects.sort((a,b)=>a.z-b.z).forEach(o=>o.draw());drawLabels();
+ drawDiagram();
+ dirty=false;
+}
+function drawDiagram(){
+ const dc=$('diagram'); if(!dc) return;
+ const ctx2=dc.getContext('2d');
+ const dpr=Math.min(devicePixelRatio||1,2);
+ const rect=dc.getBoundingClientRect();
+ if(rect.width<10||rect.height<10) return;
+ const W=rect.width, H=rect.height;
+ if(dc.width!==Math.round(W*dpr)||dc.height!==Math.round(H*dpr)){dc.width=Math.round(W*dpr);dc.height=Math.round(H*dpr);}
+ ctx2.setTransform(dpr,0,0,dpr,0,0);
+ ctx2.clearRect(0,0,W,H);
+ const b=targetBasis(), P=b[0], Q=b[1];
+ const r=exampleVector(); const rP=dot(P,r), rQ=dot(Q,r);
+ const R=viewRadius();
+ const pad=6;
+ const cx=W/2;
+ ctx2.beginPath(); ctx2.moveTo(pad,H/2); ctx2.lineTo(W-pad,H/2); ctx2.strokeStyle='#253142'; ctx2.lineWidth=1; ctx2.stroke();
+ function arc(cx,cy,rr,a0,a1,color,width){
+   const n=Math.max(8,Math.ceil(Math.abs(a1-a0)*30));
+   ctx2.beginPath();
+   for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;const x=cx+Math.cos(a)*rr, y=cy-Math.sin(a)*rr; if(i===0)ctx2.moveTo(x,y); else ctx2.lineTo(x,y);}
+   ctx2.strokeStyle=color; ctx2.lineWidth=width; ctx2.stroke();
+ }
+ function axis(cx,cy,x2,y2,label,color){
+   ctx2.beginPath(); ctx2.moveTo(cx,cy); ctx2.lineTo(x2,y2); ctx2.strokeStyle=color; ctx2.lineWidth=1.1; ctx2.stroke();
+   const ang=Math.atan2(y2-cy,x2-cx);
+   ctx2.beginPath(); ctx2.moveTo(x2,y2);
+   ctx2.lineTo(x2-6*Math.cos(ang-0.3),y2-6*Math.sin(ang-0.3));
+   ctx2.lineTo(x2-6*Math.cos(ang+0.3),y2-6*Math.sin(ang+0.3));
+   ctx2.closePath(); ctx2.fillStyle=color; ctx2.fill();
+   ctx2.fillStyle=color; ctx2.font='10px "Segoe UI",sans-serif'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+   ctx2.fillText(label, x2+(x2>cx?10:-10), y2+(y2>cy?10:-10));
+ }
+ const ttl=W<160?9:10;
+ const scl=Math.min(W*0.40, H*0.20)/R;
+ const cy1=H*0.26;
+ ctx2.fillStyle='#96a5b8'; ctx2.font=`${ttl}px "Segoe UI","Microsoft YaHei",sans-serif`; ctx2.textAlign='center'; ctx2.textBaseline='alphabetic';
+ ctx2.fillText('ECI 俯视', cx, 10);
+ ctx2.beginPath(); ctx2.arc(cx,cy1,R*scl,0,TAU); ctx2.strokeStyle='#3a4a6044'; ctx2.setLineDash([4,4]); ctx2.stroke(); ctx2.setLineDash([]);
+ axis(cx,cy1,cx+R*scl,cy1,'X','#92a4ba');
+ axis(cx,cy1,cx,cy1-R*scl,'Y','#92a4ba');
+ const Om=state.angles[0]*D;
+ const nEndX=cx+Math.cos(Om)*R*scl*0.95, nEndY=cy1-Math.sin(Om)*R*scl*0.95;
+ ctx2.beginPath(); ctx2.moveTo(cx,cy1); ctx2.lineTo(nEndX,nEndY); ctx2.strokeStyle='#e3c496aa'; ctx2.lineWidth=1.4; ctx2.setLineDash([5,4]); ctx2.stroke(); ctx2.setLineDash([]);
+ ctx2.fillStyle='#e3c496'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+ ctx2.fillText('N', nEndX+(Math.cos(Om)>0.1?9:-9), nEndY+(Math.sin(Om)>0.1?-8:8));
+ arc(cx,cy1,R*scl*0.32,0,Om,'#67dacb',1.7);
+ ctx2.fillStyle='#67dacb';
+ ctx2.fillText('Ω', cx+Math.cos(Om/2)*R*scl*0.42, cy1-Math.sin(Om/2)*R*scl*0.42-3);
+ const rx=cx+r[0]*scl, ry=cy1-r[1]*scl;
+ ctx2.beginPath(); ctx2.moveTo(cx,cy1); ctx2.lineTo(rx,ry); ctx2.strokeStyle='#f1d17f'; ctx2.lineWidth=1.8; ctx2.stroke();
+ ctx2.beginPath(); ctx2.arc(rx,ry,3,0,TAU); ctx2.fillStyle='#f1d17f'; ctx2.fill();
+ ctx2.fillStyle='#f1d17f'; ctx2.textAlign='left';
+ ctx2.fillText('r', rx+8, ry-4);
+
+ const cy2=H*0.74;
+ ctx2.fillStyle='#96a5b8'; ctx2.textAlign='center'; ctx2.textBaseline='alphabetic';
+ ctx2.fillText('轨道平面 PQW', cx, H/2+11);
+ const a=state.a, e=state.e;
+ ctx2.beginPath();
+ for(let i=0;i<=180;i++){
+   const t=i/180*TAU;
+   const rad=a*(1-e*e)/(1+e*Math.cos(t));
+   const x=rad*Math.cos(t), y=rad*Math.sin(t);
+   if(i===0) ctx2.moveTo(cx+x*scl, cy2-y*scl); else ctx2.lineTo(cx+x*scl, cy2-y*scl);
+ }
+ ctx2.strokeStyle='#67dacb'; ctx2.lineWidth=1.4; ctx2.stroke();
+ axis(cx,cy2,cx+R*scl*0.85,cy2,'P','#67dacb');
+ axis(cx,cy2,cx,cy2-R*scl*0.85,'Q','#ffa77e');
+ const om=state.angles[2]*D;
+ const npx=cx+Math.cos(-om)*R*scl*0.75, npy=cy2-Math.sin(-om)*R*scl*0.75;
+ ctx2.beginPath(); ctx2.moveTo(cx,cy2); ctx2.lineTo(npx,npy); ctx2.strokeStyle='#e3c496aa'; ctx2.lineWidth=1.4; ctx2.setLineDash([5,4]); ctx2.stroke(); ctx2.setLineDash([]);
+ ctx2.fillStyle='#e3c496'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+ ctx2.fillText('N', npx+(Math.cos(-om)>0.1?9:-9), npy+(Math.sin(-om)>0.1?-8:8));
+ arc(cx,cy2,R*scl*0.25,-om,0,'#c1a3ff',1.7);
+ ctx2.fillStyle='#c1a3ff';
+ ctx2.fillText('ω', cx+Math.cos(-om/2)*R*scl*0.34, cy2-Math.sin(-om/2)*R*scl*0.34-3);
+ const nu=state.nu*D;
+ arc(cx,cy2,R*scl*0.42,0,nu,'#f1d17f',1.7);
+ ctx2.fillStyle='#f1d17f';
+ ctx2.fillText('ν', cx+Math.cos(nu/2)*R*scl*0.50, cy2-Math.sin(nu/2)*R*scl*0.50-3);
+ const rpx=cx+rP*scl, rpy=cy2-rQ*scl;
+ ctx2.beginPath(); ctx2.moveTo(cx,cy2); ctx2.lineTo(rpx,rpy); ctx2.strokeStyle='#f1d17f'; ctx2.lineWidth=1.8; ctx2.stroke();
+ ctx2.beginPath(); ctx2.arc(rpx,rpy,3,0,TAU); ctx2.fillStyle='#f1d17f'; ctx2.fill();
+ ctx2.fillStyle='#f1d17f'; ctx2.textAlign='left';
+ ctx2.fillText('r', rpx+8, rpy-4);
+}
+function resize(){const r=canvas.getBoundingClientRect();width=r.width;height=r.height;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);dirty=true;}
+new ResizeObserver(resize).observe(canvas);
+new ResizeObserver(()=>{dirty=true;}).observe($('diagram'));
+function changed(){syncUI();dirty=true;}
+function start(auto,step){state.auto=auto;if(step!==undefined)state.progress=step;else if(state.progress>=3)state.progress=0;state.goal=Math.min(3,Math.floor(state.progress+1e-8)+1);state.hold=0;state.running=true;changed();}
+$('play').onclick=()=>{if(state.running){state.running=false;changed();}else start(true);};
+$('next').onclick=()=>start(false);$('reset').onclick=()=>{state.progress=0;state.running=false;state.hold=0;changed();};
+document.querySelectorAll('[data-step]').forEach(btn=>btn.onclick=()=>start(false,Number(btn.dataset.step)));
+$('progress').oninput=e=>{state.running=false;state.progress=Number(e.target.value);changed();};
+['raan','inclination','argp'].forEach((id,i)=>{$(id).oninput=e=>{state.running=false;state.angles[i]=Number(e.target.value);$(id+'Value').textContent=e.target.value+'°';changed();};});
+$('semi').oninput=e=>{state.a=Number(e.target.value);changed();};
+$('ecc').oninput=e=>{state.e=Number(e.target.value);changed();};
+$('nu').oninput=e=>{state.nu=Number(e.target.value);changed();};
+['planes','vector','allAngles'].forEach(id=>$(id).onchange=()=>dirty=true);
+const notesToggle=$('showNotes');
+function applyNotes(){document.body.classList.toggle('hide-notes',!notesToggle.checked);}
+notesToggle.onchange=applyNotes;applyNotes();
+$('speed').onchange=e=>state.speed=Number(e.target.value);
+$('homeView').onclick=()=>{Object.assign(state,{view:'free',yaw:35*D,elev:27*D,zoom:1});dirty=true;};$('topView').onclick=()=>{state.view='free';state.yaw=-90*D;state.elev=89.999*D;dirty=true;};$('axisView').onclick=()=>{state.view='axis';dirty=true;};
+let drag=null;canvas.onpointerdown=e=>{if(state.view==='axis'){state.yaw=Math.atan2(camera.forward[1],camera.forward[0]);state.elev=Math.asin(clamp(camera.forward[2],-1,1));state.view='free';}drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);};canvas.onpointermove=e=>{if(!drag)return;state.yaw-=(e.clientX-drag.x)*.007;state.elev=clamp(state.elev+(e.clientY-drag.y)*.007,-89.9*D,89.9*D);drag={x:e.clientX,y:e.clientY};dirty=true;};canvas.onpointerup=canvas.onpointercancel=()=>drag=null;
+canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*Math.exp(-e.deltaY*.001),.6,1.75);dirty=true;},{passive:false});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','SELECT','BUTTON','SUMMARY'].includes(document.activeElement.tagName)){e.preventDefault();$('play').click();}if(document.activeElement===canvas&&e.key.startsWith('Arrow')){e.preventDefault();state.view='free';state.yaw+=(e.key==='ArrowRight'?.1:e.key==='ArrowLeft'?-.1:0);state.elev=clamp(state.elev+(e.key==='ArrowUp'?.1:e.key==='ArrowDown'?-.1:0),-89*D,89*D);dirty=true;}});
+let last=0;function tick(now){const dt=Math.min((now-last)/1000,.06);last=now;if(state.running){if(state.hold>0){state.hold-=dt;if(state.hold<=0){if(state.goal>=3){state.running=false;}else state.goal++;}}else{state.progress=Math.min(state.goal,state.progress+dt*.26*state.speed);if(state.progress>=state.goal){if(!state.auto)state.running=false;else state.hold=.8;}}changed();}if(dirty)render();requestAnimationFrame(tick);}changed();requestAnimationFrame(tick);
+window.frameExplorer=Object.freeze({basis,transform,orbitPoint,getState:()=>({...state,angles:[...state.angles]}),getCurrentBasis:()=>basis(...currentAngles()),getTargetBasis:targetBasis,getVector:exampleVector,getShape:()=>({a:state.a,e:state.e,nu:state.nu}),getMovingOrbit:()=>orbitPath(basis(...currentAngles())),getTargetOrbit:()=>orbitPath(targetBasis())});
+</script>
+</body></html>
