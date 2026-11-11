@@ -6,108 +6,95 @@
 <style>
 :root{color-scheme:dark;--bg:#0b111b;--panel:#111a27;--line:#253142;--text:#e9eef5;--muted:#96a5b8;--cyan:#67dacb;--orange:#ffa77e;--purple:#c1a3ff;--gold:#f1d17f;--blue:#7fd1ff;--pink:#ff9ec4}
 *{box-sizing:border-box}
-html,body{height:100%}
 body{
   margin:0;
   color:var(--text);
   font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;
   font-size:13px;
-  background:#02040a;
-  overflow-x:hidden;
-}
-body::before,body::after{
-  content:"";
-  position:fixed;inset:-25%;
-  pointer-events:none;
-  z-index:0;
-  filter:blur(80px);
-  opacity:.55;
+  background:
+    radial-gradient(ellipse 90% 60% at 15% -10%, rgba(64,110,200,.22), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 88% 8%, rgba(140,80,220,.20), transparent 58%),
+    radial-gradient(ellipse 100% 70% at 50% 115%, rgba(30,110,170,.18), transparent 62%),
+    linear-gradient(180deg,#05070e 0%,#0a1020 35%,#070c17 70%,#04070d 100%);
+  background-attachment:fixed;
 }
 body::before{
+  content:"";
+  position:fixed;inset:-15%;
   background:
-    radial-gradient(circle at 22% 18%, rgba(70,130,230,.20), transparent 42%),
-    radial-gradient(circle at 78% 30%, rgba(150,90,220,.16), transparent 44%),
-    radial-gradient(circle at 46% 88%, rgba(50,180,200,.12), transparent 46%);
-  animation:auroraDrift 26s ease-in-out infinite alternate;
-}
-body::after{
-  background:
-    radial-gradient(circle at 65% 12%, rgba(220,100,180,.10), transparent 40%),
-    radial-gradient(circle at 18% 72%, rgba(70,190,220,.12), transparent 44%),
-    radial-gradient(circle at 88% 78%, rgba(110,80,220,.10), transparent 42%);
-  animation:auroraDrift 34s ease-in-out infinite alternate-reverse;
-}
-@keyframes auroraDrift{
-  0%{transform:translate3d(-3%,-2%,0) scale(1)}
-  50%{transform:translate3d(3%,2%,0) scale(1.08)}
-  100%{transform:translate3d(-2%,3%,0) scale(1.04)}
+    radial-gradient(circle at 30% 25%, rgba(90,150,255,.10), transparent 42%),
+    radial-gradient(circle at 72% 62%, rgba(180,110,255,.09), transparent 40%),
+    radial-gradient(circle at 52% 92%, rgba(80,210,255,.07), transparent 45%);
+  filter:blur(60px);
+  pointer-events:none;
+  z-index:0;
 }
 #spacebg{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
-#sparkbg{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:5}
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(ellipse 100% 75% at 50% 45%, rgba(2,4,10,.22) 0%, rgba(2,4,10,.08) 55%, rgba(2,4,10,.62) 100%),
-    linear-gradient(180deg, rgba(2,4,10,.18) 0%, rgba(2,4,10,0) 18%, rgba(2,4,10,0) 82%, rgba(2,4,10,.28) 100%);
-}
 .app{position:relative;z-index:1;max-width:1600px;margin:auto;padding:14px 24px 12px}
 button,input,select{font:inherit}
-button,select{border:1px solid rgba(37,49,66,.55);border-radius:7px;background:rgba(23,34,49,.35);color:var(--text);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-button{cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
-button:hover{background:rgba(36,50,70,.55);border-color:#5e728b}
+button,select{border:1px solid var(--line);border-radius:7px;background:#172231;color:var(--text)}
+button{cursor:pointer;transition:background .15s,border-color .15s}
+button:hover{background:#243246;border-color:#5e728b}
 button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 button:disabled{opacity:.35;cursor:default}
 a{color:var(--cyan)}
-.masthead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(37,49,66,.4);padding-bottom:10px;background:transparent}
-.brand{font-size:16px;font-weight:700;letter-spacing:3px;display:flex;align-items:center;gap:12px}
-.mark{width:28px;height:28px;border:1.5px solid var(--cyan);border-radius:50%;position:relative;transform:rotate(-30deg);box-shadow:0 0 12px rgba(103,218,203,.35)}
-.mark:after{content:"";position:absolute;inset:8px -5px;border:1.5px solid var(--cyan);border-radius:50%}
+.masthead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px}
+.brand{font-size:11px;font-weight:600;letter-spacing:2px;display:flex;align-items:center;gap:10px}
+.mark{width:21px;height:21px;border:1px solid var(--cyan);border-radius:50%;position:relative;transform:rotate(-30deg)}
+.mark:after{content:"";position:absolute;inset:6px -4px;border:1px solid var(--cyan);border-radius:50%}
 .edition{color:var(--muted);font-size:11px;letter-spacing:1px}
-.workspace{display:flex;flex-direction:column;gap:9px;background:transparent}
-.params{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;background:transparent}
-.param-card{
-  border:1px solid rgba(37,49,66,.4);
-  border-radius:9px;
-  background:rgba(10,17,27,.22);
-  padding:7px 10px 8px;
-  --accent:var(--cyan);
-  min-width:0;
-  transition:border-color .15s,background .15s,box-shadow .2s;
-  backdrop-filter:blur(1.5px);
-  -webkit-backdrop-filter:blur(1.5px);
+.intro{display:flex;justify-content:space-between;align-items:end;padding:12px 0;gap:16px}
+h1{font-size:clamp(21px,2.5vw,30px);font-weight:550;letter-spacing:-1px;margin:0 0 4px}
+h1 span{color:var(--cyan);padding:0 8px}
+.subtitle{margin:0;color:var(--muted);line-height:1.6;font-size:12.5px}
+.tag{white-space:nowrap;font-size:11px;color:var(--cyan);border:1px solid #2c534f;background:#132927;padding:6px 10px;border-radius:20px}
+.workspace{display:flex;flex-direction:column;gap:9px}
+.params{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(11,17,27,.75);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  padding:10px 0;
+  margin-top:-10px;
+  border-bottom:1px solid rgba(37,49,66,.5);
 }
+.param-card{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:7px 10px 8px;--accent:var(--cyan);min-width:0;transition:border-color .15s,background .15s}
 .param-card:nth-child(1){--accent:var(--cyan)}
 .param-card:nth-child(2){--accent:var(--orange)}
 .param-card:nth-child(3){--accent:var(--purple)}
 .param-card:nth-child(4){--accent:var(--blue)}
 .param-card:nth-child(5){--accent:var(--pink)}
 .param-card:nth-child(6){--accent:var(--gold)}
-.param-card.active{border-color:var(--accent);background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 8%,rgba(10,17,27,.22)),rgba(10,17,27,.22));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 25%,transparent),0 0 24px color-mix(in srgb,var(--accent) 18%,transparent)}
+.param-card.active{border-color:var(--accent);background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 8%,#111a27),#111a27)}
 .param-top{display:flex;align-items:center;gap:6px;min-width:0}
 .param-sym{font-family:Georgia,serif;font-size:21px;color:var(--accent);line-height:1;flex-shrink:0}
 .param-name{font-size:11px;color:var(--muted);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
 .param-val{margin-left:auto;font-size:16px;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.4px;line-height:1;flex-shrink:0;white-space:nowrap}
-.step-play{font-size:9px;padding:1px 4px;color:var(--accent);background:transparent;border-color:transparent;flex-shrink:0;white-space:nowrap;backdrop-filter:none;-webkit-backdrop-filter:none}
-.step-play:hover{background:rgba(36,50,70,.5);border-color:var(--accent)}
+.step-play{font-size:9px;padding:1px 4px;color:var(--accent);background:transparent;border-color:transparent;flex-shrink:0;white-space:nowrap}
+.step-play:hover{background:#243246;border-color:var(--accent)}
 .param-card input[type=range]{display:block;width:100%;margin:3px 0 0;accent-color:var(--accent);height:13px}
 .visual{
-  position:relative;
-  border:1px solid rgba(43,58,79,.4);
-  border-radius:14px;
+  border:1px solid var(--line);
+  border-radius:12px;
   overflow:hidden;
-  background:transparent;
+  background:radial-gradient(ellipse at 50% 48%, rgba(24,39,57,.55), rgba(16,25,37,.78) 65%);
   display:flex;
   flex-direction:column;
-  box-shadow:0 18px 60px rgba(0,0,0,.35);
 }
-.canvas-wrap{position:relative;height:clamp(360px,54vh,600px);min-width:0}
+.canvas-wrap{position:relative;height:clamp(500px,65vh,700px);min-width:0} /* 增加高度以容纳悬浮窗 */
 #scene{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
 #scene:active{cursor:grabbing}
-.scene-caption{padding:8px 16px 4px;font-size:11px;color:var(--muted);line-height:1.5;flex-shrink:0;background:transparent}
-.scene-caption b{display:block;font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;text-shadow:0 0 12px rgba(127,209,255,.25)}
-.view-head{display:flex;justify-content:flex-end;align-items:center;padding:2px 16px 8px;gap:8px;flex-shrink:0;background:transparent}
+.scene-caption{padding:8px 16px 4px;font-size:11px;color:var(--muted);line-height:1.5;flex-shrink:0;background:#101925}
+.scene-caption b{display:block;font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.view-head{display:flex;justify-content:flex-end;align-items:center;padding:2px 16px 8px;gap:8px;flex-shrink:0;background:#101925}
 .view-buttons{display:flex;gap:5px}
-.view-buttons button{padding:5px 9px;font-size:11px;background:rgba(20,32,46,.35)}
-.view-hint{position:absolute;bottom:8px;left:16px;right:16px;text-align:center;color:#8fa2b8;font-size:10px;pointer-events:none;z-index:3;text-shadow:0 0 8px rgba(0,0,0,.8)}
+.view-buttons button{padding:5px 9px;font-size:11px;background:#14202ebd}
+.view-hint{position:absolute;bottom:8px;left:16px;right:16px;text-align:center;color:#8494a9;font-size:10px;pointer-events:none;z-index:3}
 #diagram{
   position:absolute;
   left:18px;
@@ -120,55 +107,160 @@ a{color:var(--cyan)}
   pointer-events:none;
   z-index:2;
 }
-.canvas-meta{border-top:1px solid rgba(37,49,66,.35);padding:6px 14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;flex-shrink:0;background:transparent}
+.canvas-meta{border-top:1px solid #25314288;padding:6px 14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;flex-shrink:0;background:rgba(16,25,37,.55)}
 .canvas-options{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
 .canvas-options label{display:flex;align-items:center;gap:4px;cursor:pointer}
 .canvas-options input{accent-color:var(--cyan)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}
 .legend span{display:flex;align-items:center;gap:6px}
-.swatch{width:14px;height:2px;background:var(--cyan);box-shadow:0 0 8px rgba(103,218,203,.7)}
-.swatch.eci{background:#788ba1;box-shadow:none}
-.swatch.orbit{background:transparent;border-top:2px dashed #a0b5ce;box-shadow:none}
-.swatch.r{background:var(--gold);box-shadow:0 0 8px rgba(241,209,127,.7)}
+.swatch{width:14px;height:2px;background:var(--cyan)}
+.swatch.eci{background:#788ba1}
+.swatch.orbit{background:transparent;border-top:2px dashed #a0b5ce}
+.swatch.r{background:var(--gold)}
 .degenerate{color:var(--orange);font-size:10px;line-height:1.5;margin-top:4px;flex-basis:100%}
-.transport{padding:8px 14px 9px;background:transparent;border-top:1px solid rgba(37,49,66,.35);flex-shrink:0}
+.transport{padding:8px 14px 9px;background:#101925;border-top:1px solid var(--line);flex-shrink:0}
 .timeline{display:flex;align-items:center;gap:10px}
 .timeline input{flex:1;min-width:0;accent-color:var(--cyan)}
 .time-label{font-variant-numeric:tabular-nums;font-size:11px;color:var(--muted);width:74px;text-align:right;flex-shrink:0}
 .timeline-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin:1px 84px 7px 0}
 .transport-buttons{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .transport-buttons button{padding:7px 11px;font-size:11px}
-.transport-buttons .primary{background:linear-gradient(180deg,#7ce8d9,#4fc7b7);color:#08201c;border-color:#67dacb;font-weight:650;min-width:96px;box-shadow:0 0 22px rgba(103,218,203,.35)}
-.transport-buttons .primary:hover{background:linear-gradient(180deg,#8cf3e4,#57d2c2);box-shadow:0 0 30px rgba(103,218,203,.5)}
+.transport-buttons .primary{background:var(--cyan);color:#10221f;border-color:var(--cyan);font-weight:650;min-width:96px}
 .transport-buttons select{margin-left:auto;padding:6px;font-size:11px}
-.lower{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;background:transparent}
-.info-panel{
-  border:1px solid rgba(37,49,66,.35);
-  border-radius:10px;
-  padding:10px 14px;
-  background:rgba(6,10,17,.18);
-  box-shadow:0 10px 30px rgba(0,0,0,.22);
-  backdrop-filter:blur(1.5px);
-  -webkit-backdrop-filter:blur(1.5px);
-}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.info-panel{border:1px solid var(--line);border-radius:9px;padding:10px 14px;background:#101824}
 .info-heading{font-size:11px;color:var(--muted);margin:0 0 7px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;line-height:1.5}
 .coord-row{display:flex;align-items:center;gap:12px;font-family:Consolas,monospace;font-size:12px;padding:2px 0}
 .coord-row span{width:78px;color:var(--muted);font-size:10px;flex-shrink:0}
-.coord-row code{color:var(--gold);white-space:pre;text-shadow:0 0 10px rgba(241,209,127,.25)}
+.coord-row code{color:var(--gold);white-space:pre}
 .coord-note{color:var(--muted);font-size:10px;margin:7px 0 0;line-height:1.55}
 .formula{font-family:Consolas,monospace;font-size:12px;line-height:1.8;overflow-wrap:anywhere}
-.formula strong{color:var(--cyan);font-weight:400;text-shadow:0 0 10px rgba(103,218,203,.35)}
+.formula strong{color:var(--cyan);font-weight:400}
 details{margin-top:8px;color:var(--muted);font-size:11px}
 summary{cursor:pointer;width:fit-content}
 details p{line-height:1.8}
 #matrix{font-family:Consolas,monospace;line-height:1.7;color:#c9d6e6;white-space:pre;font-size:11px}
-.footer{display:flex;justify-content:space-between;gap:16px;font-size:10px;color:#7e8fa4;margin-top:8px;line-height:1.7;background:transparent}
+.footer{display:flex;justify-content:space-between;gap:16px;font-size:10px;color:#7e8fa4;margin-top:8px;line-height:1.7}
 .footer a{color:#9bacc0;text-decoration:none}
 .hidden{display:none}
 body.hide-notes .note{display:none}
+
+/* ★ 悬浮推导图表样式 */
+.deduction-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: min(520px, 45%);
+  height: 400px;
+  background: rgba(11, 17, 27, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+.deduction-overlay.collapsed {
+  height: 42px;
+}
+.deduction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(16, 25, 37, 0.9);
+  border-bottom: 1px solid rgba(37, 49, 66, 0.5);
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 12px;
+  color: var(--cyan);
+  margin: 0;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.collapse-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 6px;
+  margin-left: auto;
+  transition: color 0.15s;
+}
+.collapse-btn:hover {
+  color: var(--text);
+  background: transparent;
+}
+.deduction-params {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: Consolas, monospace;
+  font-size: 11px;
+  padding: 0 12px;
+}
+.deduction-params span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.deduction-params b {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.deduction-canvas-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  background: radial-gradient(ellipse at 50% 50%, rgba(24, 39, 57, 0.5), rgba(16, 25, 37, 0.6) 70%);
+  overflow: hidden;
+}
+#deductionChart {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+#deductionChart:active {
+  cursor: grabbing;
+}
+
+@media(max-width:1200px){
+  .deduction-overlay {
+    width: 420px;
+    height: 360px;
+  }
+}
+@media(max-width:900px){
+  .deduction-overlay {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    top: 0;
+    right: 0;
+    margin-top: 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .canvas-wrap { height: auto; }
+  #scene { height: 450px; }
+  #diagram { height: 450px; }
+}
+
 @media(max-width:1050px){
   .app{padding:12px 16px}
-  .canvas-wrap{height:460px}
+  .intro .tag{display:none}
   #diagram{width:230px}
 }
 @media(max-width:820px){
@@ -178,7 +270,7 @@ body.hide-notes .note{display:none}
 @media(max-width:760px){
   .app{padding:10px}
   .edition{display:none}
-  .canvas-wrap{height:430px}
+  .intro{padding:10px 0}
   .lower{grid-template-columns:1fr}
   .view-head{flex-direction:column;align-items:flex-start;padding:2px 10px 8px}
   .view-buttons{width:100%;flex-wrap:wrap}
@@ -200,17 +292,13 @@ body.hide-notes .note{display:none}
   .params{grid-template-columns:1fr}
   #diagram{display:none}
 }
-@media (prefers-reduced-motion:reduce){
-  body::before,body::after{animation:none}
-}
 </style>
 </head>
 <body>
 <canvas id="spacebg" aria-hidden="true"></canvas>
-<canvas id="sparkbg" aria-hidden="true"></canvas>
-<div class="vignette" aria-hidden="true"></div>
 <main class="app">
  <header class="masthead"><div class="brand"><span class="mark" aria-hidden="true"></span>ORBITAL / ORBITAL GEOMETRY</div><div class="edition">INTERACTIVE FRAME TRANSFORMATION · 01</div></header>
+ <section class="intro"><div><h1>ECI <span>→</span> Perifocal</h1><p class="subtitle">Three rotations, a new basis. Explore what Ω, i, ω, a, e and ν each change.</p></div><span class="tag">3–1–3 Euler rotations</span></section>
  <div class="workspace">
   <section class="params" aria-label="Six orbital elements">
    <section class="param-card" data-card="0" title="Right ascension of the ascending node: rotate about fixed Z from X toward node N.">
@@ -243,12 +331,42 @@ body.hide-notes .note{display:none}
    <div class="canvas-wrap">
      <canvas id="scene" aria-label="The green ellipse rotates with the moving frame and matches the fixed dashed target orbit after three steps. Drag to orbit the view; scroll to zoom." tabindex="0" width="1327" height="444"></canvas>
      <canvas id="diagram" aria-label="Diagram showing the six orbital elements mapped to ECI coordinates"></canvas>
+     
+     <!-- ★ 悬浮推导图表 -->
+     <div class="deduction-overlay" id="deductionOverlay">
+       <div class="deduction-header">
+         <h2 class="section-title">Deduction from Position Vector r</h2>
+         <div class="deduction-params">
+           <span style="color:#67dacb">Ω: <b id="dedOmega">45.0°</b></span>
+           <span style="color:#ffa77e">i: <b id="dedInc">55.0°</b></span>
+           <span style="color:#c1a3ff">ω: <b id="dedArgp">40.0°</b></span>
+           <span style="color:#7fd1ff">a: <b id="dedA">2.65</b></span>
+           <span style="color:#ff9ec4">e: <b id="dedE">0.40</b></span>
+           <span style="color:#f1d17f">ν: <b id="dedNu">58.0°</b></span>
+         </div>
+         <button class="collapse-btn" id="toggleDeduction" title="Collapse/Expand">−</button>
+       </div>
+       <div class="deduction-canvas-wrap">
+         <canvas id="deductionChart"></canvas>
+       </div>
+     </div>
+
      <div class="view-hint">Drag to orbit · Scroll to zoom · Space to play / pause</div>
    </div>
    <div class="scene-caption"><b id="sceneTitle">Start · Ellipse in the equatorial plane</b><span id="sceneSub">The green ellipse rotates with the moving axes</span></div>
    <div class="view-head"><div class="view-buttons"><button id="homeView">3D view</button><button id="axisView">View along axis</button><button id="topView">Equatorial view</button></div></div>
    <div class="canvas-meta">
-     <div class="canvas-options"><label><input type="checkbox" id="planes" checked="">Planes</label><label><input type="checkbox" id="vector" checked="">Position vector</label><label><input type="checkbox" id="allAngles">All angle arcs</label><label><input type="checkbox" id="showNotes">Notes</label></div>
+     <div class="canvas-options">
+       <label><input type="checkbox" id="planes" checked="">Planes</label>
+       <label><input type="checkbox" id="vector" checked="">Position vector</label>
+       <label><input type="checkbox" id="allAngles">All angle arcs</label>
+       <label><input type="checkbox" id="showOmega" checked="">Ω</label>
+       <label><input type="checkbox" id="showInc" checked="">i</label>
+       <label><input type="checkbox" id="showArgp" checked="">ω</label>
+       <label><input type="checkbox" id="showNu" checked="">ν</label>
+       <label><input type="checkbox" id="diagramElems" checked="">Elements</label>
+       <label><input type="checkbox" id="showNotes">Notes</label>
+     </div>
      <div class="legend"><span><i class="swatch eci"></i>Fixed ECI axes</span><span><i class="swatch"></i>Rotating ellipse</span><span><i class="swatch orbit"></i>Fixed target orbit</span><span><i class="swatch r"></i>Fixed position vector r</span></div>
      <div class="degenerate hidden note" id="degenerate"></div>
    </div>
@@ -262,6 +380,7 @@ body.hide-notes .note{display:none}
 [  0.418  -0.514   0.749 ]
 [  0.589   0.781   0.208 ]</div><p>P points toward periapsis. Q is perpendicular to P in the orbital plane, in the direction of increasing true anomaly, and W = P × Q. The three angular elements Ω, i, ω fix the orbit's orientation; a and e fix its shape; ν fixes the position of r on that orbit. This animation demonstrates a change of basis, not satellite motion along the orbit.</p></details></section>
  </div>
+ 
  <footer class="footer"><span id="footerNote" class="note">Earth and distances are schematic · a = 2.65 · e = 0.40 · ν = 58° · Right-handed frames</span><a href="https://orbital-mechanics.space/classical-orbital-elements/orbital-elements-and-the-state-vector.html" target="_blank" rel="noopener noreferrer">Reference: Orbital Mechanics &amp; Astrodynamics ↗</a></footer>
 </main>
 <script>
@@ -269,118 +388,26 @@ body.hide-notes .note{display:none}
 const $=id=>document.getElementById(id),TAU=Math.PI*2,D=Math.PI/180;
 const add=(a,b)=>a.map((v,i)=>v+b[i]),scale=(v,s)=>v.map(x=>x*s),dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],unit=v=>scale(v,1/Math.hypot(...v));
 const X=[1,0,0],Y=[0,1,0],Z=[0,0,1],O=[0,0,0],colors=['#67dacb','#ffa77e','#c1a3ff'];
-const SCENE_CX=0.56;
+const SCENE_CX=0.45; // ★ 将 3D 视图中心向左移动，避免被悬浮窗遮挡
 const state={angles:[45,55,40],a:2.65,e:0.4,nu:58,progress:0,running:false,auto:true,goal:1,hold:0,speed:1,yaw:35*D,elev:27*D,zoom:1,view:'free'};
 
-/* ===================== 点击空白处：星星放大后快速消失 ===================== */
-(function(){
-  const sc=document.getElementById('sparkbg');
-  if(!sc) return;
-  const sx=sc.getContext('2d');
-  const DPR=Math.min(window.devicePixelRatio||1,2);
-  let SW=0,SH=0,sparks=[];
+// ★ 推导图表独立的视角控制
+const dedView = {
+  yaw: -40 * D,
+  elev: 25 * D,
+  zoom: 1.0,
+  isDragging: false,
+  lastX: 0,
+  lastY: 0
+};
 
-  function resizeSpark(){
-    SW=window.innerWidth; SH=window.innerHeight;
-    sc.width=Math.round(SW*DPR); sc.height=Math.round(SH*DPR);
-    sc.style.width=SW+'px'; sc.style.height=SH+'px';
-    sx.setTransform(DPR,0,0,DPR,0,0);
-  }
-  window.addEventListener('resize',resizeSpark);
-  resizeSpark();
-
-  function isInteractive(el){
-    if(!el||el===document.documentElement||el===document.body) return false;
-    const tag=el.tagName;
-    if(['INPUT','BUTTON','SELECT','TEXTAREA','SUMMARY','A','LABEL','DETAILS'].includes(tag)) return true;
-    if(el.closest('button, input, select, textarea, summary, a, label, details')) return true;
-    if(el.isContentEditable) return true;
-    return false;
-  }
-
-  function spawnSpark(x,y){
-    const huePick=Math.random();
-    const color=huePick<0.4?'#ffffff':huePick<0.7?'#bfe4ff':huePick<0.85?'#d8c8ff':'#ffe8c0';
-    sparks.push({
-      x,y,
-      life:0,
-      maxLife:0.5+Math.random()*0.25,
-      baseR:2+Math.random()*2,
-      maxScale:5+Math.random()*4,
-      hue:color,
-      spikes:4+Math.floor(Math.random()*3)
-    });
-  }
-
-  document.addEventListener('pointerdown',e=>{
-    if(e.button!==0) return;
-    if(isInteractive(e.target)) return;
-    spawnSpark(e.clientX,e.clientY);
-  },{passive:true});
-
-  function drawSparks(){
-    sx.clearRect(0,0,SW,SH);
-    for(let i=sparks.length-1;i>=0;i--){
-      const s=sparks[i];
-      const p=s.life/s.maxLife;
-      if(p>=1){ sparks.splice(i,1); continue; }
-      const grow=1-Math.pow(1-p,1.6);
-      const r=s.baseR*(1+grow*(s.maxScale-1));
-      let alpha;
-      if(p<0.15) alpha=p/0.15;
-      else alpha=Math.pow(1-(p-0.15)/0.85,1.8);
-      if(alpha<0) alpha=0;
-
-      const glow=sx.createRadialGradient(s.x,s.y,0,s.x,s.y,r*4.2);
-      glow.addColorStop(0,'rgba(255,255,255,'+(0.85*alpha)+')');
-      glow.addColorStop(0.35,'rgba(180,220,255,'+(alpha*0.55)+')');
-      glow.addColorStop(1,'rgba(130,180,255,0)');
-      sx.fillStyle=glow;
-      sx.beginPath(); sx.arc(s.x,s.y,r*4.2,0,TAU); sx.fill();
-
-      sx.fillStyle=s.hue;
-      sx.globalAlpha=alpha;
-      sx.beginPath(); sx.arc(s.x,s.y,r*0.55,0,TAU); sx.fill();
-
-      sx.strokeStyle=s.hue;
-      sx.lineWidth=Math.max(0.6,r*0.12);
-      sx.globalAlpha=alpha*0.85;
-      const spikeLen=r*2.6;
-      for(let k=0;k<s.spikes;k++){
-        const a=k/s.spikes*TAU+Math.PI/4;
-        const x1=s.x+Math.cos(a)*r*0.6, y1=s.y+Math.sin(a)*r*0.6;
-        const x2=s.x+Math.cos(a)*spikeLen, y2=s.y+Math.sin(a)*spikeLen;
-        sx.beginPath(); sx.moveTo(x1,y1); sx.lineTo(x2,y2); sx.stroke();
-      }
-      sx.globalAlpha=1;
-
-      s.life+=0.022;
-    }
-    requestAnimationFrame(drawSparks);
-  }
-  requestAnimationFrame(drawSparks);
-})();
-/* =============================================================== */
-
-/* ===================== 深空背景：明亮星空 + 持续旋转的太阳系（跟随主图缩放） ===================== */
+/* ===================== 星空背景 + 彗星动态 ===================== */
 (function(){
   const bg=document.getElementById('spacebg');
   if(!bg) return;
   const bx=bg.getContext('2d');
   const DPR=Math.min(window.devicePixelRatio||1,2);
-  let BW=0,BH=0,stars=[],dust=[],comets=[],last=0;
-
-  const SUN={baseRX:0,baseRY:0,cx:0,cy:0,tilt:-0.30};
-  const PLANETS=[
-    {name:'Mercury',r:0.052,size:1.4,period:4.2,color:'#d8c4a8',ring:false,ph0:Math.random()*TAU},
-    {name:'Venus',  r:0.083,size:2.0,period:7.4,color:'#f0d48a',ring:false,ph0:Math.random()*TAU},
-    {name:'Earth',  r:0.120,size:2.3,period:11.6,color:'#7fc4ff',ring:false,ph0:Math.random()*TAU},
-    {name:'Mars',   r:0.158,size:1.9,period:18.0,color:'#ff9a72',ring:false,ph0:Math.random()*TAU},
-    {name:'Jupiter',r:0.235,size:3.8,period:36.0,color:'#f0c898',ring:false,ph0:Math.random()*TAU},
-    {name:'Saturn', r:0.305,size:3.3,period:52.0,color:'#f0e0b0',ring:true,ph0:Math.random()*TAU},
-    {name:'Uranus', r:0.365,size:2.7,period:70.0,color:'#b8f0ec',ring:false,ph0:Math.random()*TAU},
-    {name:'Neptune',r:0.415,size:2.6,period:88.0,color:'#a0b8ff',ring:false,ph0:Math.random()*TAU}
-  ];
+  let BW=0,BH=0,stars=[],comets=[],last=0;
 
   function resizeBG(){
     BW=window.innerWidth; BH=window.innerHeight;
@@ -390,145 +417,59 @@ const state={angles:[45,55,40],a:2.65,e:0.4,nu:58,progress:0,running:false,auto:
     initStars();
   }
   function initStars(){
-    const n=Math.round(BW*BH/3800);
-    stars=Array.from({length:n},()=>{
-      const bright=Math.random();
-      return {
-        x:Math.random()*BW,
-        y:Math.random()*BH,
-        r:bright>0.92?Math.random()*1.8+1.2:(Math.random()*1.2+0.3),
-        a:bright>0.92?(Math.random()*0.4+0.55):(Math.random()*0.6+0.2),
-        ph:Math.random()*TAU,
-        sp:Math.random()*1.3+0.3,
-        hue:Math.random()<0.18?'#ffe8c8':(Math.random()<0.18?'#cfe0ff':(Math.random()<0.12?'#e0ccff':'#eef4ff')),
-        spark:bright>0.92
-      };
-    });
-    const m=Math.round(BW*BH/14000);
-    dust=Array.from({length:m},()=>({
-      x:Math.random()*BW, y:Math.random()*BH,
-      r:Math.random()*2.2+0.5,
-      vx:(Math.random()-.5)*6, vy:(Math.random()-.5)*6,
-      a:Math.random()*0.16+0.04,
-      hue:Math.random()<0.5?'rgba(120,170,240,':'rgba(180,140,240,'
+    const n=Math.round(BW*BH/8000);
+    stars=Array.from({length:n},()=>({
+      x:Math.random()*BW,
+      y:Math.random()*BH,
+      r:Math.random()*1.3+0.2,
+      a:Math.random()*0.65+0.18,
+      ph:Math.random()*TAU,
+      sp:Math.random()*0.9+0.25,
+      hue:Math.random()<0.15?'#ffe6c4':(Math.random()<0.15?'#c4dcff':'#dbe9ff')
     }));
-    SUN.baseRX=Math.min(BW*0.32, BH*0.44);
-    SUN.baseRY=SUN.baseRX*0.72;
-    // ★ 太阳系中心移到右上角
-    SUN.cx=BW*0.80;
-    SUN.cy=BH*0.26;
   }
   function spawnComet(){
     const fromLeft=Math.random()<0.5;
-    const startX=fromLeft?-160:BW+160;
-    const startY=Math.random()*BH*0.7-30;
-    const ang=(fromLeft?1:-1)*(0.24+Math.random()*0.30);
-    const speed=340+Math.random()*300;
+    const startX=fromLeft?-140:BW+140;
+    const startY=Math.random()*BH*0.75-20;
+    const ang=(fromLeft?1:-1)*(0.26+Math.random()*0.30);
+    const speed=260+Math.random()*220;
     return {
       x:startX,y:startY,
       vx:Math.cos(ang)*speed*(fromLeft?1:-1),
-      vy:Math.abs(Math.sin(ang))*speed*0.9,
-      len:180+Math.random()*220,
-      life:0,maxLife:1.9+Math.random()*1.6,
-      width:1.6+Math.random()*1.6
+      vy:Math.abs(Math.sin(ang))*speed*0.85,
+      len:140+Math.random()*160,
+      life:0,maxLife:2.2+Math.random()*1.8,
+      width:1.6+Math.random()*1.4
     };
   }
   function drawComet(c){
     const sp=Math.hypot(c.vx,c.vy)||1;
     const ux=c.vx/sp, uy=c.vy/sp;
     const tailX=c.x-ux*c.len, tailY=c.y-uy*c.len;
-    const fade=Math.min(1,c.life*2.2)*Math.min(1,(c.maxLife-c.life)*2.2);
+    const fade=Math.min(1,c.life*2)*Math.min(1,(c.maxLife-c.life)*2);
     const g=bx.createLinearGradient(c.x,c.y,tailX,tailY);
-    g.addColorStop(0,'rgba(235,250,255,'+(0.95*fade)+')');
-    g.addColorStop(0.18,'rgba(170,215,255,'+(0.55*fade)+')');
-    g.addColorStop(0.55,'rgba(140,185,255,'+(0.20*fade)+')');
-    g.addColorStop(1,'rgba(130,170,255,0)');
+    g.addColorStop(0,'rgba(220,245,255,'+(0.90*fade)+')');
+    g.addColorStop(0.22,'rgba(150,205,255,'+(0.50*fade)+')');
+    g.addColorStop(0.6,'rgba(120,170,255,'+(0.16*fade)+')');
+    g.addColorStop(1,'rgba(120,160,255,0)');
     bx.strokeStyle=g;
     bx.lineWidth=c.width;
     bx.lineCap='round';
     bx.beginPath(); bx.moveTo(c.x,c.y); bx.lineTo(tailX,tailY); bx.stroke();
-    const rg=bx.createRadialGradient(c.x,c.y,0,c.x,c.y,16);
-    rg.addColorStop(0,'rgba(255,255,255,'+(0.98*fade)+')');
-    rg.addColorStop(0.3,'rgba(210,240,255,'+(0.55*fade)+')');
-    rg.addColorStop(1,'rgba(140,190,255,0)');
+    const rg=bx.createRadialGradient(c.x,c.y,0,c.x,c.y,12);
+    rg.addColorStop(0,'rgba(255,255,255,'+(0.95*fade)+')');
+    rg.addColorStop(0.35,'rgba(190,235,255,'+(0.45*fade)+')');
+    rg.addColorStop(1,'rgba(130,185,255,0)');
     bx.fillStyle=rg;
-    bx.beginPath(); bx.arc(c.x,c.y,16,0,TAU); bx.fill();
-    bx.strokeStyle='rgba(255,255,255,'+(0.65*fade)+')';
-    bx.lineWidth=0.9;
+    bx.beginPath(); bx.arc(c.x,c.y,12,0,TAU); bx.fill();
+    bx.strokeStyle='rgba(255,255,255,'+(0.55*fade)+')';
+    bx.lineWidth=0.8;
     bx.beginPath();
-    bx.moveTo(c.x-10,c.y); bx.lineTo(c.x+10,c.y);
-    bx.moveTo(c.x,c.y-10); bx.lineTo(c.x,c.y+10);
+    bx.moveTo(c.x-7,c.y); bx.lineTo(c.x+7,c.y);
+    bx.moveTo(c.x,c.y-7); bx.lineTo(c.x,c.y+7);
     bx.stroke();
   }
-  function drawSolarSystem(time,mainZoom){
-    const z=0.7+(mainZoom-0.6)/1.15*0.65;
-    const rx=SUN.baseRX*z, ry=SUN.baseRY*z;
-    const cx=SUN.cx, cy=SUN.cy;
-    const spin=time*0.07;
-    const tilt=SUN.tilt+spin;
-    const ct=Math.cos(tilt), st=Math.sin(tilt);
-
-    const sunR=Math.max(8,Math.min(rx*0.07,26))*(0.85+z*0.15);
-    const sunGlow=bx.createRadialGradient(cx,cy,0,cx,cy,sunR*3.4);
-    sunGlow.addColorStop(0,'rgba(255,246,214,.95)');
-    sunGlow.addColorStop(0.25,'rgba(255,205,120,.55)');
-    sunGlow.addColorStop(0.58,'rgba(255,150,80,.16)');
-    sunGlow.addColorStop(1,'rgba(255,130,60,0)');
-    bx.fillStyle=sunGlow;
-    bx.beginPath(); bx.arc(cx,cy,sunR*3.4,0,TAU); bx.fill();
-    bx.fillStyle='#fff8dc';
-    bx.beginPath(); bx.arc(cx,cy,sunR,0,TAU); bx.fill();
-    bx.fillStyle='rgba(255,255,230,.55)';
-    bx.beginPath(); bx.arc(cx-sunR*0.2,cy-sunR*0.2,sunR*0.45,0,TAU); bx.fill();
-
-    for(const p of PLANETS){
-      const erx=rx*p.r, ery=ry*p.r;
-      bx.save();
-      bx.translate(cx,cy);
-      bx.rotate(tilt);
-      bx.beginPath();
-      bx.ellipse(0,0,erx,ery,0,0,TAU);
-      bx.strokeStyle='rgba(160,200,255,'+(0.14+z*0.08)+')';
-      bx.lineWidth=0.8;
-      bx.stroke();
-      bx.restore();
-
-      const ang=time/p.period*TAU+p.ph0;
-      const ex=erx*Math.cos(ang), ey=ery*Math.sin(ang);
-      const px=cx+ex*ct-ey*st;
-      const py=cy+ex*st+ey*ct;
-      const ps=p.size*z;
-
-      const pg=bx.createRadialGradient(px,py,0,px,py,ps*3.4);
-      pg.addColorStop(0,p.color);
-      pg.addColorStop(0.32,p.color+'99');
-      pg.addColorStop(1,'rgba(0,0,0,0)');
-      bx.fillStyle=pg;
-      bx.beginPath(); bx.arc(px,py,ps*3.4,0,TAU); bx.fill();
-      bx.fillStyle=p.color;
-      bx.beginPath(); bx.arc(px,py,ps,0,TAU); bx.fill();
-      bx.fillStyle='rgba(255,255,255,.35)';
-      bx.beginPath(); bx.arc(px-ps*0.28,py-ps*0.28,ps*0.38,0,TAU); bx.fill();
-
-      if(p.ring){
-        bx.save();
-        bx.translate(px,py);
-        bx.rotate(-0.42+spin*0.5);
-        bx.beginPath();
-        bx.ellipse(0,0,ps*2.3,ps*0.72,0,0,TAU);
-        bx.strokeStyle='rgba(245,225,175,.75)';
-        bx.lineWidth=1.2;
-        bx.stroke();
-        bx.restore();
-      }
-      bx.beginPath();
-      bx.arc(px,py,ps*1.9,0,TAU);
-      bx.strokeStyle=p.color+'44';
-      bx.lineWidth=0.9;
-      bx.stroke();
-    }
-  }
-
   function loop(t){
     const dt=Math.min((t-last)/1000,0.05); last=t;
     bx.clearRect(0,0,BW,BH);
@@ -538,26 +479,9 @@ const state={angles:[45,55,40],a:2.65,e:0.4,nu:58,progress:0,running:false,auto:
       bx.globalAlpha=s.a*tw;
       bx.fillStyle=s.hue;
       bx.beginPath(); bx.arc(s.x,s.y,s.r,0,TAU); bx.fill();
-      if(s.spark){
-        bx.globalAlpha=s.a*tw*0.7;
-        bx.strokeStyle=s.hue;
-        bx.lineWidth=0.7;
-        bx.beginPath();
-        bx.moveTo(s.x-s.r*2.6,s.y); bx.lineTo(s.x+s.r*2.6,s.y);
-        bx.moveTo(s.x,s.y-s.r*2.6); bx.lineTo(s.x,s.y+s.r*2.6);
-        bx.stroke();
-      }
     }
     bx.globalAlpha=1;
-    for(const d of dust){
-      d.x+=d.vx*dt; d.y+=d.vy*dt;
-      if(d.x<-10) d.x=BW+10; if(d.x>BW+10) d.x=-10;
-      if(d.y<-10) d.y=BH+10; if(d.y>BH+10) d.y=-10;
-      bx.fillStyle=d.hue+d.a+')';
-      bx.beginPath(); bx.arc(d.x,d.y,d.r,0,TAU); bx.fill();
-    }
-    drawSolarSystem(time, state.zoom);
-    if(comets.length<4 && Math.random()<0.02) comets.push(spawnComet());
+    if(comets.length<2 && Math.random()<0.007) comets.push(spawnComet());
     for(let i=comets.length-1;i>=0;i--){
       const c=comets[i];
       c.x+=c.vx*dt; c.y+=c.vy*dt; c.life+=dt;
@@ -606,6 +530,14 @@ function syncUI(){
  $('degenerate').classList.toggle('hidden',notes.length===0);
  $('degenerate').innerHTML=notes.join('<br>');
  const r=exampleVector(),b=basis(...a);$('eciCoords').textContent=format(r);$('movingCoords').textContent=format(b.map(v=>dot(v,r)));$('movingName').textContent=done?'r · PQW':'r · Moving';$('matrix').textContent=targetBasis().map(row=>format(row)).join('\n');
+
+ // ★ 更新悬浮推导图表的实时参数
+ $('dedOmega').textContent = state.angles[0].toFixed(1)+'°';
+ $('dedInc').textContent = state.angles[1].toFixed(1)+'°';
+ $('dedArgp').textContent = state.angles[2].toFixed(1)+'°';
+ $('dedA').textContent = state.a.toFixed(2);
+ $('dedE').textContent = state.e.toFixed(2);
+ $('dedNu').textContent = state.nu.toFixed(1)+'°';
 }
 const canvas=$('scene'),ctx=canvas.getContext('2d');let width=800,height=460,dirty=true,objects=[],labels=[],boxes=[];
 let camera={right:X,up:Y,forward:Z};
@@ -619,26 +551,29 @@ function dotMark(p,color,size=4){const q=project(p);objects.push({z:q.z+.01,draw
 function orbitFill(points,color){const pts=points.map(project);objects.push({z:-.01,draw(){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();}});}
 function infiniteXYPlane(ext,gridStep,gridRange){
  const cpts=[[-ext,-ext,0],[ext,-ext,0],[ext,ext,0],[-ext,ext,0]].map(project);
- objects.push({z:-.1,draw(){ctx.beginPath();cpts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle='#7896b512';ctx.fill();}});
+ objects.push({z:-.1,draw(){ctx.beginPath();cpts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle='#7896b518';ctx.fill();}});
  const n=Math.floor(gridRange/gridStep);
  for(let j=-n;j<=n;j++){
    const v=j*gridStep;
-   line([-ext,v,0],[ext,v,0],'#8195af14',1);
-   line([v,-ext,0],[v,ext,0],'#8195af14',1);
+   line([-ext,v,0],[ext,v,0],'#8195af16',1);
+   line([v,-ext,0],[v,ext,0],'#8195af16',1);
  }
 }
-function earth(){const q=project(O),radius=Math.max(4,.34*q.s);objects.push({z:0,draw(){const gradient=ctx.createRadialGradient(q.x-radius*.4,q.y-radius*.4,1,q.x,q.y,radius);gradient.addColorStop(0,'#4a8090');gradient.addColorStop(.5,'#214552');gradient.addColorStop(1,'#0c2029');ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.fillStyle=gradient;ctx.fill();ctx.strokeStyle='#6b9ead66';ctx.lineWidth=1;ctx.stroke();ctx.save();ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.clip();ctx.strokeStyle='#9ec8c822';for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(q.x,q.y+j*radius*.5,radius, radius*.24,0,0,TAU);ctx.stroke();}ctx.beginPath();ctx.ellipse(q.x,q.y,radius*.45,radius,-.3,0,TAU);ctx.stroke();ctx.restore();}});}
+function earth(){const q=project(O),radius=Math.max(4,.34*q.s);objects.push({z:0,draw(){const gradient=ctx.createRadialGradient(q.x-radius*.4,q.y-radius*.4,1,q.x,q.y,radius);gradient.addColorStop(0,'#508c9d');gradient.addColorStop(.5,'#254958');gradient.addColorStop(1,'#102536');ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.fillStyle=gradient;ctx.fill();ctx.strokeStyle='#6b9ead88';ctx.lineWidth=1;ctx.stroke();ctx.save();ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.clip();ctx.strokeStyle='#9ec8c82d';for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(q.x,q.y+j*radius*.5,radius, radius*.24,0,0,TAU);ctx.stroke();}ctx.beginPath();ctx.ellipse(q.x,q.y,radius*.45,radius,-.3,0,TAU);ctx.stroke();ctx.restore();}});}
 function angleArc(k,partial,bright){const target=state.angles[k]*D,angle=target*partial;if(angle<.001)return;const n=nodeDirection(),t=[-n[1],n[0],0],inc=state.angles[1]*D;let u,v,radius;
- if(k===0){u=X;v=Y;radius=1.05;}else if(k===1){u=Z;v=scale(t,-1);radius=1.36;}else{u=n;v=add(scale(t,Math.cos(inc)),scale(Z,Math.sin(inc)));radius=1.68;}
+ if(k===0){u=X;v=Y;radius=1.05;}else if(k===1){const W_curr=basis(...currentAngles())[2]; u=t; v=cross(W_curr,n); radius=1.25;}else{u=n;v=add(scale(t,Math.cos(inc)),scale(Z,Math.sin(inc)));radius=1.68;}
  const count=Math.max(4,Math.ceil(angle*28));const path=Array.from({length:count+1},(_,j)=>scale(add(scale(u,Math.cos(angle*j/count)),scale(v,Math.sin(angle*j/count))),radius));
  curve(path,bright?colors[k]:colors[k]+'35',bright?3:1,bright?[]:[2,3]);if(bright){arrow(path[path.length-3],path[path.length-1],colors[k],2);line(O,path[0],colors[k]+'55',1,[3,4]);line(O,path[path.length-1],colors[k]+'55',1,[3,4]);const mid=angle*.5;label(scale(add(scale(u,Math.cos(mid)),scale(v,Math.sin(mid))),radius+.22),`${['Ω','i','ω'][k]} ${(angle/D).toFixed(0)}°`,colors[k],13,3);}}
-function drawLabels(){labels.sort((a,b)=>b.priority-a.priority);for(const l of labels){ctx.font=`${l.size>=13?'600 ':''}${l.size}px "Segoe UI","Microsoft YaHei",sans-serif`;const w=ctx.measureText(l.text).width+10,h=l.size+8;let x=clamp(l.p.x+8,8,width-w-8),y=clamp(l.p.y-h/2,8,height-h-24);const orig={x,y};for(let j=0;j<20;j++){if(!boxes.some(b=>x<b.x+b.w+3&&x+w+3>b.x&&y<b.y+b.h+2&&y+h+2>b.y))break;y=clamp(orig.y+(j%2?-1:1)*Math.ceil((j+1)/2)*(h+3),8,height-h-24);if(j>10)x=clamp(orig.x+w+8,8,width-w-8);}boxes.push({x,y,w,h});if(Math.hypot(x-orig.x,y-orig.y)>15){ctx.beginPath();ctx.moveTo(l.p.x,l.p.y);ctx.lineTo(x+w/2,y+h/2);ctx.strokeStyle=l.color+'55';ctx.lineWidth=1;ctx.stroke();}ctx.fillStyle='rgba(6,10,17,.85)';ctx.beginPath();ctx.roundRect(x,y,w,h,4);ctx.fill();ctx.fillStyle=l.color;ctx.textBaseline='middle';ctx.fillText(l.text,x+5,y+h/2);}}
-function render(){setCamera();ctx.clearRect(0,0,width,height);objects=[];labels=[];boxes=[];const k=activeStep(),b=basis(...currentAngles()),target=targetBasis(),n=nodeDirection(),done=state.progress>=3;
- ctx.strokeStyle='#8faac408';ctx.lineWidth=1;for(let x=width%40;x<width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke();}for(let y=height%40;y<height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
+function drawLabels(){labels.sort((a,b)=>b.priority-a.priority);for(const l of labels){ctx.font=`${l.size>=13?'600 ':''}${l.size}px "Segoe UI","Microsoft YaHei",sans-serif`;const w=ctx.measureText(l.text).width+10,h=l.size+8;let x=clamp(l.p.x+8,8,width-w-8),y=clamp(l.p.y-h/2,8,height-h-24);const orig={x,y};for(let j=0;j<20;j++){if(!boxes.some(b=>x<b.x+b.w+3&&x+w+3>b.x&&y<b.y+b.h+2&&y+h+2>b.y))break;y=clamp(orig.y+(j%2?-1:1)*Math.ceil((j+1)/2)*(h+3),8,height-h-24);if(j>10)x=clamp(orig.x+w+8,8,width-w-8);}boxes.push({x,y,w,h});if(Math.hypot(x-orig.x,y-orig.y)>15){ctx.beginPath();ctx.moveTo(l.p.x,l.p.y);ctx.lineTo(x+w/2,y+h/2);ctx.strokeStyle=l.color+'55';ctx.lineWidth=1;ctx.stroke();}ctx.fillStyle='#101925df';ctx.beginPath();ctx.roundRect(x,y,w,h,4);ctx.fill();ctx.fillStyle=l.color;ctx.textBaseline='middle';ctx.fillText(l.text,x+5,y+h/2);}}
+
+function render(){
+ setCamera();ctx.clearRect(0,0,width,height);objects=[];labels=[];boxes=[];
+ const k=activeStep(),b=basis(...currentAngles()),target=targetBasis(),n=nodeDirection(),done=state.progress>=3;
+ ctx.strokeStyle='#8faac409';ctx.lineWidth=1;for(let x=width%40;x<width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke();}for(let y=height%40;y<height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
  const movingOrbit=orbitPath(b);
  const orbit=orbitPath(target);
  const R=viewRadius()*0.86;
- orbitFill(orbit,'#8c72d940');
+ orbitFill(orbit,'#8c72d942');
  if($('planes').checked){infiniteXYPlane(viewRadius()*10, viewRadius()/2.2, viewRadius()*3.2);}
  [X,Y,Z].forEach((v,i)=>{line(scale(v,-R*0.92),O,'#8293ab35',1,[4,5]);arrow(O,scale(v,R*1.02),'#8293ab88',1.25);label(scale(v,R*1.05),['X · ECI','Y · ECI','Z · ECI'][i],'#92a4ba',10);});
  curve(movingOrbit,'#67dacbcc',2.5);
@@ -648,12 +583,87 @@ function render(){setCamera();ctx.clearRect(0,0,width,height);objects=[];labels=
  const peri=transform(target,orbitPoint(0));dotMark(peri,'#67dacb',4);label(peri,'Periapsis','#8de6d9',10,1);
  const axis=rotationAxis();line(scale(axis,-R*0.92),scale(axis,R*0.92),colors[k]+'44',7);arrow(scale(axis,R*0.12),scale(axis,R*0.96),colors[k]+'cc',2);
  b.forEach((v,i)=>{arrow(O,scale(v,R*0.82),colors[i],2.5);label(scale(v,R*0.86),done?['P','Q','W'][i]:['x′','y′','z′'][i],colors[i],15,2);});
- for(let j=0;j<3;j++){if(j===k||$('allAngles').checked){angleArc(j,1,false);angleArc(j,clamp(state.progress-j,0,1),true);}}
+ 
+ const showArcs = [$('showOmega').checked, $('showInc').checked, $('showArgp').checked];
+ for(let j=0;j<3;j++){
+   if(showArcs[j] && (j===k || $('allAngles').checked)) {
+     angleArc(j,1,false);
+     angleArc(j,clamp(state.progress-j,0,1),true);
+   }
+ }
+ 
+ if($('diagramElems').checked) {
+   const bT = targetBasis();
+   const P = bT[0], Q = bT[1], W = bT[2];
+   const rVec = exampleVector();
+   const nu = state.nu * D;
+   
+   if($('showInc').checked) {
+     const t_eq = [-n[1], n[0], 0]; 
+     const N_orb_perp = cross(W, n);
+     const radius_i = 1.2;
+     const i_angle = state.angles[1] * D;
+     const path_i = [];
+     for (let j = 0; j <= 30; j++) {
+         const ang = i_angle * j / 30;
+         const dir = add(scale(t_eq, Math.cos(ang)), scale(N_orb_perp, Math.sin(ang)));
+         path_i.push(scale(dir, radius_i));
+     }
+     if (i_angle > 0.05) {
+         curve(path_i, '#67dacb', 1.5); 
+         arrow(path_i[path_i.length-2], path_i[path_i.length-1], '#67dacb', 1.5);
+         const mid_ang = i_angle / 2;
+         const label_dir = add(scale(t_eq, Math.cos(mid_ang)), scale(N_orb_perp, Math.sin(mid_ang)));
+         label(scale(label_dir, radius_i + 0.15), 'i', '#67dacb', 12, 2);
+     }
+   }
+
+   const a = state.a, e = state.e;
+   const p = a * (1 - e * e);
+   const r_mag = p / (1 + e * Math.cos(nu));
+   const r_dot = (p * e * Math.sin(nu)) / Math.pow(1 + e * Math.cos(nu), 2);
+   const v_P = -r_mag * Math.sin(nu) + r_dot * Math.cos(nu);
+   const v_Q = r_mag * Math.cos(nu) + r_dot * Math.sin(nu);
+   const v_mag = Math.hypot(v_P, v_Q);
+   const v_dir_PQW = [v_P / v_mag, v_Q / v_mag, 0];
+   const v_ECI = transform(bT, v_dir_PQW);
+   
+   arrow(O, scale(P, R * 0.75), '#ff6b6b', 2);
+   label(scale(P, R * 0.78), 'e', '#ff6b6b', 14, 2);
+   
+   arrow(O, scale(W, R * 0.9), '#4ecdc4', 2);
+   label(scale(W, R * 0.93), 'h', '#4ecdc4', 14, 2);
+   
+   arrow(rVec, add(rVec, scale(v_ECI, R * 0.45)), '#f9ca24', 2);
+   label(add(rVec, scale(v_ECI, R * 0.48)), 'v', '#f9ca24', 14, 2);
+   
+   if ($('showNu').checked) {
+     const phi_radius = R * 0.55;
+     const phi_count = 30;
+     const phi_path = [];
+     for(let j=0; j<=phi_count; j++){
+       const ang = nu * j / phi_count;
+       phi_path.push(scale(add(scale(P, Math.cos(ang)), scale(Q, Math.sin(ang))), phi_radius));
+     }
+     curve(phi_path, '#ffa77e88', 1.5);
+     if (nu > 0.2) {
+        arrow(phi_path[phi_count-2], phi_path[phi_count-1], '#ffa77e', 1.5);
+        const mid_ang = nu / 2;
+        const label_pos = scale(add(scale(P, Math.cos(mid_ang)), scale(Q, Math.sin(mid_ang))), phi_radius + 0.18);
+        label(label_pos, 'φ (ν)', '#ffa77e', 12, 2);
+     }
+   }
+ }
+ 
  if($('vector').checked){const r=exampleVector();arrow(O,r,'#f1d17f',2);dotMark(r,'#f1d17f',4);label(r,'r · Fixed position','#f1d17f',10,1);}
  earth();objects.sort((a,b)=>a.z-b.z).forEach(o=>o.draw());drawLabels();
  drawDiagram();
+ 
+ try { drawDeductionChart(); } catch(e) { console.error("Deduction chart error:", e); }
+ 
  dirty=false;
 }
+
 function drawDiagram(){
  const dc=$('diagram'); if(!dc) return;
  const ctx2=dc.getContext('2d');
@@ -741,9 +751,232 @@ function drawDiagram(){
  ctx2.fillStyle='#f1d17f'; ctx2.textAlign='left';
  ctx2.fillText('r', rpx+8, rpy-4);
 }
+
+/* ★ 底部推导图表实现 */
+function drawDeductionChart() {
+  const canvas = $('deductionChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  if (rect.width < 10 || rect.height < 10) return;
+  if (canvas.width !== Math.round(rect.width * dpr) || canvas.height !== Math.round(rect.height * dpr)) {
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  const bT = targetBasis();
+  const P = bT[0], Q = bT[1], W = bT[2];
+  const n = nodeDirection();
+  const rVec = exampleVector();
+  const a = state.a, e = state.e, nu = state.nu * D;
+  const angles = state.angles;
+
+  const cx = rect.width * 0.5, cy = rect.height * 0.5;
+  const sc = Math.min(rect.width, rect.height) * 0.32 * dedView.zoom;
+  const yaw = dedView.yaw, elev = dedView.elev;
+  
+  const cf = [Math.cos(elev)*Math.cos(yaw), Math.cos(elev)*Math.sin(yaw), Math.sin(elev)];
+  const cr = unit(cross(Z, cf));
+  const cu = cross(cf, cr);
+  const proj = v => ({
+    x: cx + dot(v, cr) * sc,
+    y: cy - dot(v, cu) * sc
+  });
+
+  const drawLine = (v1, v2, color, width=1, dash=[]) => {
+    const p1 = proj(v1), p2 = proj(v2);
+    ctx.beginPath();
+    ctx.setLineDash(dash);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  };
+  
+  const drawArrow = (v1, v2, color, width=2) => {
+    drawLine(v1, v2, color, width);
+    const p1 = proj(v1), p2 = proj(v2);
+    const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    ctx.beginPath();
+    ctx.moveTo(p2.x, p2.y);
+    ctx.lineTo(p2.x - 8*Math.cos(ang-0.35), p2.y - 8*Math.sin(ang-0.35));
+    ctx.lineTo(p2.x - 8*Math.cos(ang+0.35), p2.y - 8*Math.sin(ang+0.35));
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  };
+
+  // 赤道面
+  const r_plane = 2.2;
+  const epts = [[-r_plane, -r_plane, 0], [r_plane, -r_plane, 0], [r_plane, r_plane, 0], [-r_plane, r_plane, 0]].map(proj);
+  ctx.beginPath();
+  epts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(120, 150, 180, 0.04)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(120, 150, 180, 0.15)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  for(let g=-2; g<=2; g++){
+    drawLine([g,-r_plane,0], [g,r_plane,0], 'rgba(120,150,180,0.06)');
+    drawLine([-r_plane,g,0], [r_plane,g,0], 'rgba(120,150,180,0.06)');
+  }
+
+  // 坐标轴
+  const axLen = 1.8;
+  drawArrow(O, scale(X, axLen), '#8293ab88', 1.2);
+  drawArrow(O, scale(Y, axLen), '#8293ab88', 1.2);
+  drawArrow(O, scale(Z, axLen), '#8293ab88', 1.2);
+  ctx.fillStyle = '#92a4ba';
+  ctx.font = '12px sans-serif';
+  const px = proj(scale(X, axLen));
+  ctx.fillText('X', px.x + 8, px.y + 4);
+  const py = proj(scale(Y, axLen));
+  ctx.fillText('Y', py.x + 8, py.y + 4);
+  const pz = proj(scale(Z, axLen));
+  ctx.fillText('Z', pz.x + 8, pz.y - 4);
+
+  // 轨道椭圆
+  ctx.beginPath();
+  for(let i=0; i<=180; i++){
+    const t = i/180 * TAU;
+    const rad = a*(1-e*e)/(1+e*Math.cos(t));
+    const p = proj(transform(bT, [rad*Math.cos(t), rad*Math.sin(t), 0]));
+    if(i===0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+  ctx.strokeStyle = '#67dacb44';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // 向量
+  drawLine(O, scale(n, 1.6), '#e3c49655', 1.5, [4,4]);
+  const pn = proj(scale(n, 1.7));
+  ctx.fillStyle = '#e3c496';
+  ctx.font = '13px sans-serif';
+  ctx.fillText('N', pn.x + 8, pn.y + 4);
+
+  drawArrow(O, scale(W, 1.5), '#4ecdc4', 2);
+  const ph = proj(scale(W, 1.6));
+  ctx.fillStyle = '#4ecdc4';
+  ctx.fillText('h', ph.x + 8, ph.y + 4);
+
+  drawArrow(O, scale(P, 1.4), '#ff6b6b', 2);
+  const pe = proj(scale(P, 1.5));
+  ctx.fillStyle = '#ff6b6b';
+  ctx.fillText('e', pe.x + 8, pe.y + 4);
+
+  const rLen = Math.hypot(...rVec) * 0.9;
+  drawArrow(O, scale(unit(rVec), rLen), '#f1d17f', 2.5);
+  const pr = proj(scale(unit(rVec), rLen));
+  ctx.fillStyle = '#f1d17f';
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillText('r', pr.x + 8, pr.y - 8);
+
+  // 绘制 r 在 X, Y, Z 上的投影 (lmn)
+  const rx = rVec[0], ry = rVec[1], rz = rVec[2];
+  drawLine([rx,0,0], rVec, 'rgba(241, 209, 127, 0.3)', 1, [3,3]);
+  drawLine([0,ry,0], rVec, 'rgba(241, 209, 127, 0.3)', 1, [3,3]);
+  drawLine([0,0,rz], rVec, 'rgba(241, 209, 127, 0.3)', 1, [3,3]);
+  drawLine(O, [rx,0,0], 'rgba(241, 209, 127, 0.3)', 1);
+  drawLine(O, [0,ry,0], 'rgba(241, 209, 127, 0.3)', 1);
+  drawLine(O, [0,0,rz], 'rgba(241, 209, 127, 0.3)', 1);
+
+  const p_rx = proj([rx,0,0]);
+  const p_ry = proj([0,ry,0]);
+  const p_rz = proj([0,0,rz]);
+  ctx.fillStyle = 'rgba(241, 209, 127, 0.6)';
+  ctx.font = '10px sans-serif';
+  ctx.fillText('l', (pr.x + p_rx.x)/2, (pr.y + p_rx.y)/2);
+  ctx.fillText('m', (pr.x + p_ry.x)/2, (pr.y + p_ry.y)/2);
+  ctx.fillText('n', (pr.x + p_rz.x)/2, (pr.y + p_rz.y)/2);
+
+  // 弧线绘制
+  const drawArc = (u, v, angle, radius, color, labelText) => {
+    if (angle < 0.01) return;
+    const pts = [];
+    const N = 30;
+    for(let j=0; j<=N; j++){
+      const th = angle * j / N;
+      pts.push(proj(scale(add(scale(u, Math.cos(th)), scale(v, Math.sin(th))), radius)));
+    }
+    ctx.beginPath();
+    pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // 箭头
+    const p1 = pts[pts.length-2], p2 = pts[pts.length-1];
+    if (p1 && p2) {
+      const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+      ctx.beginPath();
+      ctx.moveTo(p2.x, p2.y);
+      ctx.lineTo(p2.x - 6*Math.cos(ang-0.4), p2.y - 6*Math.sin(ang-0.4));
+      ctx.lineTo(p2.x - 6*Math.cos(ang+0.4), p2.y - 6*Math.sin(ang+0.4));
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    const deg = angle / D;
+    const is90 = Math.abs(deg - 90) < 0.5;
+    const mid = angle / 2;
+    const centerPt = scale(add(scale(u, Math.cos(mid)), scale(v, Math.sin(mid))), radius + 0.25);
+    const pMid = proj(centerPt);
+    
+    if (is90) {
+      ctx.fillStyle = '#ffa77e';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`${labelText} = 90°`, pMid.x - 15, pMid.y);
+      
+      // 在终点画个小直角框
+      const dir = add(scale(u, Math.cos(angle)), scale(v, Math.sin(angle)));
+      const endPt = proj(scale(dir, radius));
+      const t_dir = add(scale(u, -Math.sin(angle)), scale(v, Math.cos(angle)));
+      const p_b = proj(scale(add(dir, scale(t_dir, -0.1)), radius));
+      const p_c = proj(scale(add(dir, scale(dir, -0.1)), radius));
+      const p_d = proj(scale(add(dir, scale(t_dir, -0.1), scale(dir, -0.1)), radius));
+      
+      ctx.beginPath();
+      ctx.moveTo(p_b.x, p_b.y);
+      ctx.lineTo(p_d.x, p_d.y);
+      ctx.lineTo(p_c.x, p_c.y);
+      ctx.strokeStyle = '#ffa77e';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = color;
+      ctx.font = '11px sans-serif';
+      ctx.fillText(`${labelText} = ${deg.toFixed(0)}°`, pMid.x - 10, pMid.y);
+    }
+  };
+
+  const t_eq = [-n[1], n[0], 0];
+  const i_ang = angles[1] * D;
+  const t_orb = add(scale(t_eq, Math.cos(i_ang)), scale(Z, Math.sin(i_ang)));
+
+  // Ω: X -> N
+  drawArc(X, Y, angles[0] * D, 1.1, '#67dacb', 'Ω');
+  // i: t_eq -> t_orb
+  drawArc(t_eq, Z, i_ang, 1.35, '#ffa77e', 'i');
+  // ω: N -> P
+  drawArc(n, t_orb, angles[2] * D, 1.55, '#c1a3ff', 'ω');
+  // ν: P -> r
+  drawArc(P, Q, nu, 1.25, '#f1d17f', 'ν');
+}
+
 function resize(){const r=canvas.getBoundingClientRect();width=r.width;height=r.height;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);dirty=true;}
 new ResizeObserver(resize).observe(canvas);
 new ResizeObserver(()=>{dirty=true;}).observe($('diagram'));
+new ResizeObserver(()=>{dirty=true;}).observe($('deductionChart'));
+
 function changed(){syncUI();dirty=true;}
 function start(auto,step){state.auto=auto;if(step!==undefined)state.progress=step;else if(state.progress>=3)state.progress=0;state.goal=Math.min(3,Math.floor(state.progress+1e-8)+1);state.hold=0;state.running=true;changed();}
 $('play').onclick=()=>{if(state.running){state.running=false;changed();}else start(true);};
@@ -754,14 +987,62 @@ $('progress').oninput=e=>{state.running=false;state.progress=Number(e.target.val
 $('semi').oninput=e=>{state.a=Number(e.target.value);changed();};
 $('ecc').oninput=e=>{state.e=Number(e.target.value);changed();};
 $('nu').oninput=e=>{state.nu=Number(e.target.value);changed();};
-['planes','vector','allAngles'].forEach(id=>$(id).onchange=()=>dirty=true);
+
+['planes','vector','allAngles','showOmega','showInc','showArgp','showNu','diagramElems'].forEach(id=>$(id).onchange=()=>dirty=true);
+
 const notesToggle=$('showNotes');
 function applyNotes(){document.body.classList.toggle('hide-notes',!notesToggle.checked);}
 notesToggle.onchange=applyNotes;applyNotes();
 $('speed').onchange=e=>state.speed=Number(e.target.value);
 $('homeView').onclick=()=>{Object.assign(state,{view:'free',yaw:35*D,elev:27*D,zoom:1});dirty=true;};$('topView').onclick=()=>{state.view='free';state.yaw=-90*D;state.elev=89.999*D;dirty=true;};$('axisView').onclick=()=>{state.view='axis';dirty=true;};
+
+// 主图鼠标拖拽与滚轮
 let drag=null;canvas.onpointerdown=e=>{if(state.view==='axis'){state.yaw=Math.atan2(camera.forward[1],camera.forward[0]);state.elev=Math.asin(clamp(camera.forward[2],-1,1));state.view='free';}drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);};canvas.onpointermove=e=>{if(!drag)return;state.yaw-=(e.clientX-drag.x)*.007;state.elev=clamp(state.elev+(e.clientY-drag.y)*.007,-89.9*D,89.9*D);drag={x:e.clientX,y:e.clientY};dirty=true;};canvas.onpointerup=canvas.onpointercancel=()=>drag=null;
 canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*Math.exp(-e.deltaY*.001),.6,1.75);dirty=true;},{passive:false});
+
+// ★ 悬浮窗折叠控制
+const overlay = $('deductionOverlay');
+const toggleBtn = $('toggleDeduction');
+toggleBtn.addEventListener('click', () => {
+  overlay.classList.toggle('collapsed');
+  if (overlay.classList.contains('collapsed')) {
+    toggleBtn.textContent = '+';
+    toggleBtn.title = 'Expand';
+  } else {
+    toggleBtn.textContent = '−';
+    toggleBtn.title = 'Collapse';
+    dirty = true; // 展开时重绘
+  }
+});
+
+// ★ 底部推导图表鼠标拖拽与滚轮
+const dedCanvas = $('deductionChart');
+dedCanvas.addEventListener('pointerdown', e => {
+  dedView.isDragging = true;
+  dedView.lastX = e.clientX;
+  dedView.lastY = e.clientY;
+  dedCanvas.setPointerCapture(e.pointerId);
+});
+dedCanvas.addEventListener('pointermove', e => {
+  if (!dedView.isDragging) return;
+  const dx = e.clientX - dedView.lastX;
+  const dy = e.clientY - dedView.lastY;
+  dedView.yaw -= dx * 0.01;
+  dedView.elev = clamp(dedView.elev + dy * 0.01, -89 * D, 89 * D);
+  dedView.lastX = e.clientX;
+  dedView.lastY = e.clientY;
+  dirty = true;
+});
+dedCanvas.addEventListener('pointerup', e => {
+  dedView.isDragging = false;
+  dedCanvas.releasePointerCapture(e.pointerId);
+});
+dedCanvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  dedView.zoom = clamp(dedView.zoom * Math.exp(-e.deltaY * 0.001), 0.4, 3.0);
+  dirty = true;
+}, { passive: false });
+
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','SELECT','BUTTON','SUMMARY'].includes(document.activeElement.tagName)){e.preventDefault();$('play').click();}if(document.activeElement===canvas&&e.key.startsWith('Arrow')){e.preventDefault();state.view='free';state.yaw+=(e.key==='ArrowRight'?.1:e.key==='ArrowLeft'?-.1:0);state.elev=clamp(state.elev+(e.key==='ArrowUp'?.1:e.key==='ArrowDown'?-.1:0),-89*D,89*D);dirty=true;}});
 let last=0;function tick(now){const dt=Math.min((now-last)/1000,.06);last=now;if(state.running){if(state.hold>0){state.hold-=dt;if(state.hold<=0){if(state.goal>=3){state.running=false;}else state.goal++;}}else{state.progress=Math.min(state.goal,state.progress+dt*.26*state.speed);if(state.progress>=state.goal){if(!state.auto)state.running=false;else state.hold=.8;}}changed();}if(dirty)render();requestAnimationFrame(tick);}changed();requestAnimationFrame(tick);
 window.frameExplorer=Object.freeze({basis,transform,orbitPoint,getState:()=>({...state,angles:[...state.angles]}),getCurrentBasis:()=>basis(...currentAngles()),getTargetBasis:targetBasis,getVector:exampleVector,getShape:()=>({a:state.a,e:state.e,nu:state.nu}),getMovingOrbit:()=>orbitPath(basis(...currentAngles())),getTargetOrbit:()=>orbitPath(targetBasis())});
